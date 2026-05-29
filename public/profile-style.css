@@ -1,0 +1,236 @@
+/* ================= Base Reset & Setup ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body, html {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* ဖုန်းမျက်နှာပြင်မှာ အပေါ်အောက် ကပ်မနေအောင် padding ပေးထားတာပါ */
+    padding: 20px 15px; 
+    background-color: #f5f5f5;
+    overflow-x: hidden; /* ဘေးတိုက် Scroll ထွက်မလာအောင် တားဆီးခြင်း */
+}
+
+/* Background Video */
+#video-background {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    object-fit: cover;
+}
+
+/* ================= Profile Card Container ================= */
+.profile-container {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 35px 25px;
+    border-radius: 24px;
+    width: 100%;
+    /* PC ပေါ်မှာဆိုရင် 450px ထက် ပိုမကျယ်စေဘဲ၊ ဖုန်းပေါ်မှာဆိုရင် screen အပြည့် Flexible ဖြစ်စေပါတယ် */
+    max-width: 450px; 
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    color: #000000;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================= Avatar / Header ================= */
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.avatar-wrapper {
+    width: 85px;
+    height: 85px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    color: #333333;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    flex-shrink: 0; /* ပုံ ပျက်မသွားအောင် ထိန်းတာပါ */
+}
+
+.profile-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #000000;
+    word-break: break-word; /* နာမည်ရှည်ရင် ဖုန်းမှာ အောက်ကြောင်းဆင်းပေးဖို့ */
+}
+
+.user-id-tag {
+    font-size: 13px;
+    font-weight: 600;
+    color: #444444;
+    background: rgba(0, 0, 0, 0.08);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-top: 6px;
+}
+
+.profile-divider {
+    border: 0;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.12);
+    margin: 20px 0;
+    width: 100%;
+}
+
+/* ================= Info List Items ================= */
+.profile-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    padding: 14px 16px;
+    border-radius: 14px;
+    text-align: left;
+    width: 100%;
+    transition: transform 0.2s ease;
+}
+
+.info-item:hover {
+    transform: translateX(4px);
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.info-icon {
+    font-size: 18px;
+    color: #111111;
+    width: 30px;
+    flex-shrink: 0; /* Icon ပုံစံမပျက်အောင် */
+}
+
+.info-details {
+    flex: 1; /* ကျန်တဲ့ နေရာလွတ်အကုန် ယူခိုင်းတာပါ */
+    min-width: 0; /* စာသားတွေ ရှည်ထွက်ပြီး Box ကြီး ပွင့်မထွက်သွားအောင် */
+}
+
+.info-details label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #555555;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.info-details p {
+    font-size: 15px;
+    font-weight: 600;
+    color: #000000;
+    /* ဒေတာဘေ့စ်က စာသားတွေ အလွန်အမင်း ရှည်လျားနေရင် ဖုန်း screen အပြင်မထွက်ဘဲ အောက်ကြောင်းဆင်းပေးမယ့် စနစ် */
+    white-space: normal;
+    word-break: break-word; 
+}
+
+/* ================= Action Buttons ================= */
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.action-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.edit-btn {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.edit-btn:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+.logout-btn {
+    background: rgba(204, 0, 0, 0.1);
+    color: #cc0000;
+    border: 1px solid rgba(204, 0, 0, 0.2);
+}
+
+.logout-btn:hover {
+    background: #cc0000;
+    color: #ffffff;
+}
+
+/* ================= MEDIA QUERIES (မိုဘိုင်းဖုန်းအသေးစားများအတွက်) ================= */
+@media (max-width: 400px) {
+    body {
+        padding: 10px 10px; /* ဘေးဘောင်နေရာလွတ် ပိုချန်ပေးမယ် */
+    }
+    
+    .profile-container {
+        padding: 22px 16px;
+        border-radius: 20px;
+    }
+    
+    .profile-header h2 {
+        font-size: 19px;
+    }
+    
+    .avatar-wrapper {
+        width: 75px;
+        height: 75px;
+        font-size: 35px;
+    }
+    
+    .info-item {
+        padding: 12px 14px;
+    }
+    
+    .info-details p {
+        font-size: 13.5px; /* ဖုန်းအသေးမှာ စာလုံးအရွယ်အစား နည်းနည်း လျှော့ပေးမယ် */
+    }
+    
+    .action-btn {
+        padding: 12px;
+        font-size: 14px;
+    }
+}

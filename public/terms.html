@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms and Conditions</title>
+    <style>
+        /* ==================== ORIGINAL CSS (လုံးဝမပြင်ထားပါ) ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body, html {
+            min-height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        #video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -100;
+            object-fit: cover;
+        }
+
+        /* 💡 အပြင်ဘက်ထုတ်လိုက်တဲ့ အစိတ်အပိုင်းတွေ အားလုံး တစ်တန်းတည်း စီဆင်းသွားအောင် Wrapper အသစ်တစ်ခုပဲ ပတ်ပေးထားပါတယ် */
+        .main-wrapper {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px; /* Box အပြင်က Logo၊ Form Box၊ Footer တို့ ကြား အကွာအဝေး */
+        }
+
+        /* Container */
+        .form-container.terms-container {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            
+            /* 🛠️ အဆင်မပြေဖြစ်စေတဲ့ အဖြူရောင် ဘောင်လိုင်းကြီးကို ဖယ်ရှားလိုက်ပါတယ် */
+            border: none; 
+            
+            padding: 30px 24px;
+            border-radius: 24px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            color: #000000;
+        }
+
+        .form-container h2 {
+            font-size: 22px;
+            font-weight: 700;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .terms-subtitle {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111111;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 5px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            width: 33.33%;
+            height: 100%;
+            background: #000000;
+            transition: width 0.3s ease;
+        }
+
+        /* Pages Dynamic Switching */
+        .terms-page {
+            display: none;
+        }
+
+        .terms-page.active {
+            display: block;
+            animation: slideIn 0.3s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(15px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Text Content Area */
+        .terms-content {
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 14px;
+            padding: 18px;
+            max-height: 320px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .intro-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #111111;
+        }
+
+        .terms-divider {
+            border: 0;
+            height: 1px;
+            background: rgba(0, 0, 0, 0.12);
+            margin: 12px 0;
+        }
+
+        .terms-content h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: 15px;
+            margin-bottom: 6px;
+        }
+
+        .terms-content p {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #222222;
+            margin-bottom: 10px;
+        }
+
+        /* Checkbox on last page */
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-group label {
+            font-size: 13.5px;
+            font-weight: 600;
+            line-height: 1.5;
+            cursor: pointer;
+        }
+
+        /* Navigation Buttons */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 13px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .back-btn {
+            background: rgba(0, 0, 0, 0.08);
+            color: #000000;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .next-btn, .submit-btn {
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+        }
+
+        .next-btn:hover, .submit-btn:hover:not(:disabled) {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 💡 ၃။ ဒီဇိုင်းပိုင်းအလွဲပြင်ဆင်ချက် - Logo အပြင်ထွက်လာတဲ့အတွက် Position Fixed/Absolute တွေကြောင့် Layout မပျက်အောင် ကာကွယ်ထားပါတယ် */
+        .logo-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .app-logo {
+            max-width: 90px;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.15)); 
+        }
+
+        /* 💡 ၂။ အောက်ခြေပုံ Footer Artwork အတွက် သီးသန့် CSS */
+        .footer-artwork {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 5px;
+        }
+
+        .footer-img {
+            width: 100%;
+            max-width: 280px; /* Desktop အနေတော် အရွယ်အစား */
+            height: auto;
+            object-fit: contain;
+        }
+
+        .copyright {
+            font-size: 12px;
+            font-weight: 600;
+            color: #111111;
+            margin-top: 8px;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        /* 💡 ၁။ ဖုန်းနဲ့ကြည့်ရင် ဖတ်ရတာ အဆင်ပြေအောင် Responsive Font Sizes များ */
+        @media (max-width: 480px) {
+            .form-container.terms-container {
+                padding: 22px 16px;
+                border-radius: 20px;
+            }
+            
+            /* ဖုန်းမှာ ဖောင့်ဆိုဒ်တွေကို အချိုးကျ နည်းနည်းစီ သေးပေးထားပါတယ် */
+            .form-container h2 {
+                font-size: 18px;
+            }
+
+            .terms-subtitle {
+                font-size: 12px;
+            }
+
+            .terms-content {
+                max-height: 260px;
+                padding: 14px;
+            }
+
+            .intro-text {
+                font-size: 12.5px;
+            }
+
+            .terms-content h3 {
+                font-size: 13.5px;
+            }
+
+            .terms-content p {
+                font-size: 12.5px;
+                line-height: 1.5;
+            }
+
+            .checkbox-group label {
+                font-size: 12px;
+            }
+
+            .action-btn {
+                padding: 11px;
+                font-size: 14px;
+            }
+
+            .app-logo {
+                max-width: 75px; /* ဖုန်းပေါ်မှာ Logo ကို သင့်တော်သလို ချုံ့ပါတယ် */
+            }
+
+            .footer-img {
+                max-width: 220px; /* ဖုန်းပေါ်မှာ အောက်ခြေပုံကို သင့်တော်သလို ချုံ့ပါတယ် */
+            }
+            
+            .copyright {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <video autoplay loop muted playsinline id="video-background">
+        <source src="sakura video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="main-wrapper">
+
+        <div class="logo-wrapper">
+            <img src="MABA 10th anniversary logo.png" alt="MABA Logo" class="app-logo">
+        </div>
+
+        <div class="form-container terms-container">
+
+            <h2>MABA Myanmar- Japan Festival Bingo Game</h2>
+            <p class="terms-subtitle">စည်းမျဉ်းစည်းကမ်းများနှင့် သတ်မှတ်ချက်များ (Terms & Conditions)</p>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <form id="termsForm" onsubmit="handleTermsSubmit(event)">
+
+                <div class="terms-page active" id="page1">
+                    <div class="terms-content">
+                        <p class="intro-text">MABA Myanmar- Japan Festival Bingo Game တွင် ပါဝင်ဆင်နွှဲရန်အတွက် အောက်ပါ
+                            စည်းမျဉ်းစည်းကမ်းများနှင့် သတ်မှတ်ချက်များကို သေချာစွာ ဖတ်ရှုပြီး သဘောတူညီရန် လိုအပ်ပါသည်။
+                            သင်သည် စနစ်အတွင်းသို့ Login ဝင်ရောက်ခြင်း (သို့မဟုတ်) မှတ်ပုံတင်ခြင်းဖြင့် ဤစည်းကမ်းချက်များကို
+                            လိုက်နာရန် သဘောတူညီပြီး ဖြစ်သည်ဟု မှတ်ယူပါမည်။</p>
+                        <hr class="terms-divider">
+                        <h3>၁။ အကောင့်ဖွင့်လှစ်ခြင်းနှင့် ကိုယ်ရေးအချက်အလက် (Registration & Account)</h3>
+                        <p>ဂိမ်းတွင် ပါဝင်ရန်အတွက် မိမိ၏ အမည်ရင်း၊ တိကျမှန်ကန်သော ဖုန်းနံပါတ် စသည်တို့နှင့်အတူ
+                            အကောင့်ဖွင့်လှစ်ခြင်း(Register) အား ဦးစွာပထမ ပြုလုပ်ရပါမည်။</p>
+                        <p>လူတစ်ဦးလျှင် အကောင့် (၁) ခုသာ ဖွင့်လှစ်ခွင့်ရှိပြီး၊ အချက်အလက်အမှားများ ဖြည့်သွင်းထားပါက
+                            ကံစမ်းမဲပေါက်သော်လည်း ဆုထုတ်ယူခွင့်ကို ငြင်းပယ်ပိုင်ခွင့် ရှိသည်။</p>
+                    </div>
+                </div>
+
+                <div class="terms-page" id="page2">
+                    <div class="terms-content">
+                        <h3>၂။ ဂိမ်းကစားခြင်းဆိုင်ရာ စည်းကမ်းချက်များ (Game Mechanics)</h3>
+                        <p>Bingo Game ကံစမ်းခွင့်ရရှိရန် ပွဲတော်အတွင်းရှိ ဆိုင်ခန်း (၁၀၀) အနက်မှ မိမိနှစ်သက်ရာ မတူညီသော
+                            ဆိုင်ခန်း (၁၀) ခန်း သို့ လူကိုယ်တိုင် သွားရောက်လေ့လာရပါမည်။</p>
+                        <p>ဆိုင်ခန်းတစ်ခုချင်းစီတွင် ဆိုင်ရှင်မှ ပေးသော Code ကို မိမိဖုန်းဖြင့် ရိုက်ထည့်၍ Stamp ရယူရပါမည်။
+                            ၎င်း Code တစ်ခုအား တစ်ကြိမ်သာ သုံးစွဲခွင့်ရှိမည်။ Game Road Map ပေါ်ရှိ Stamp တစ်ခုချင်းစီတွင်
+                            မိမိရရှိထားသောကုဒ်ကို ရိုက်သွင်းရပါမည်။</p>
+                        <p>ဆိုင်ခန်းတစ်ခုချင်းစီတွင် သတ်မှတ်ထားသော Code အရေအတွက် (၁၀၀) သာ ရှိမည်ဖြစ်ပြီး၊ ကုန်ဆုံးသွားပါက
+                            ထိုဆိုင်ခန်းမှ Stamp ထပ်မံရရှိနိုင်တော့မည် မဟုတ်ပါ။</p>
+
+                        <h3>၃။ ဂိမ်းအချိန်အပိုင်းအခြားနှင့် Stamp သယ်ဆောင်ခွင့် (Sessions & Carry-over)</h3>
+                        <p>ဂိမ်းကို သတ်မှတ်ထားသော အချိန်အပိုင်းအခြား (Game Sessions) များအတိုင်းသာ ကစားခွင့်ရှိသည်။</p>
+                        <p>အကယ်၍ လက်ရှိ Session အတွင်း Stamp (၁၀) ခု မပြည့်မီ အချိန်ပြည့်သွားပါက မိမိစုဆောင်းထားသော Stamp
+                            များသည် ပျက်ပြယ်မသွားဘဲ နောက်လာမည့် Session တွင် ဆက်လက်အကျုံးဝင်မည် ဖြစ်သည်။</p>
+                        <p>သို့သော် သွားရောက်ပြီးသား ဆိုင်ခန်းများမှ Stamp ကို နောက်တစ်ကြိမ် ထပ်မံရယူခွင့် မရှိဘဲ၊
+                            မသွားရသေးသော ဆိုင်ခန်းအသစ်များမှသာ ထပ်မံစုဆောင်းရပါမည်။</p>
+                    </div>
+                </div>
+
+                <div class="terms-page" id="page3">
+                    <div class="terms-content">
+                        <h3>၄။ ဆုမဲများနှင့် ထုတ်ယူခြင်း (Prizes & Redemption)</h3>
+                        <p>Game Session တစ်ခုစီတွင် Stamp ၁၀ ခု အမြန်ဆုံးပြည့်ပြီး Bingo တန်းသူ ဦးရေ (၂၀) သာ Spin Wheel
+                            လှည့်၍ ဗလာမပါ ကံစမ်းခွင့် ရရှိမည်ဖြစ်သည်။</p>
+                        <p>ဆုမဲပေါက်သူများသည် မိမိတို့ရရှိသော "ဆုမဲကုဒ် (Claim Code)" ကို ဖုန်းတွင် ပြသ၍ ပွဲတော်အတွင်းရှိ
+                            MABA ရုံးချုပ် (HQ) ကောင်တာ တွင် လူကိုယ်တိုင် သွားရောက်ထုတ်ယူရပါမည်။</p>
+                        <p>ဆုထုတ်ယူချိန်တွင် စနစ်၌ မှတ်ပုံတင်ထားသော အမည်နှင့် ဖုန်းနံပါတ်တို့ကို ဝန်ထမ်းများထံ တိကျစွာ
+                            ပြောကြား ပြသရပါမည်။</p>
+
+                        <h3>၅။ မသမာမှုတားဆီးရေးနှင့် ပယ်ဖျက်ပိုင်ခွင့် (Anti-Fraud & Disqualification)</h3>
+                        <p>နည်းပညာကို အသုံးပြု၍ စနစ်အား တိုက်ခိုက်ခြင်း၊ ကလိမ်ကကျစ်ပြုလုပ်ခြင်း၊ Code စနစ်ကို လိမ်လည်ရန်
+                            ကြိုးပမ်းခြင်း စသည့် မသမာမှုတစ်စုံတစ်ရာ တွေ့ရှိပါက ၎င်း User အကောင့်အား
+                            မည်သည့်သတိပေးချက်မျှမရှိဘဲ ချက်ချင်းပိတ်သိမ်းမည်ဖြစ်ပြီး ရရှိထားသော ဆုမဲအားလုံးကို ပယ်ဖျက်ပါမည်။
+                        </p>
+                        <p>အငြင်းပွားဖွယ်ရာ ကိစ္စရပ်များ ပေါ်ပေါက်လာပါက MABA ပွဲစီစဉ်သူကော်မတီ၏ ဆုံးဖြတ်ချက်သာ အတည် ဖြစ်သည်။
+                        </p>
+
+                        <h3>၆။ ကိုယ်ရေးအချက်အလက် ထိန်းသိမ်းမှု (Privacy Policy)</h3>
+                        <p>သင်ဖြည့်သွင်းထားသော အချက်အလက်များကို MABA မှ စနစ်တကျ ထိန်းသိမ်းထားမည်ဖြစ်ပြီး၊ ပွဲတော်ဆိုင်ရာ
+                            သတင်းအချက်အလက်များနှင့် နောင်ကျင်းပမည့် လှုပ်ရှားမှုများအတွက်သာ အသုံးပြုသွားမည်ဖြစ်ပါသည်။</p>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="agreeCheckbox">
+                        <label for="agreeCheckbox">ကျွန်ုပ်သည် အထက်ပါ စည်းမျဉ်းစည်းကမ်းများနှင့် သတ်မှတ်ချက်များကို ဖတ်ရှုနားလည်ပြီး သဘောတူညီပါသည်။</label>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" id="prevBtn" class="action-btn back-btn" onclick="changePage(-1)" style="display: none;">Back</button>
+                    <button type="button" id="nextBtn" class="action-btn next-btn" onclick="changePage(1)">Next</button>
+                    <button type="submit" id="acceptBtn" class="action-btn submit-btn" style="display: none;" disabled>Accept & Continue</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="footer-artwork">
+            <img src="Torii & Firework.png" alt="Footer Illustration" class="footer-img">
+            <p class="copyright">&copy; Metro IT (Knowledge Key)</p>
+        </div>
+
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 3;
+        const progressBar = document.getElementById('progressBar');
+        const agreeCheckbox = document.getElementById('agreeCheckbox');
+        const acceptBtn = document.getElementById('acceptBtn');
+
+        function changePage(direction) {
+            document.getElementById(`page${currentPage}`).classList.remove('active');
+            currentPage += direction;
+            document.getElementById(`page${currentPage}`).classList.add('active');
+            
+            const progressWidth = (currentPage / totalPages) * 100;
+            progressBar.style.width = progressWidth + '%';
+            
+            if (currentPage === 1) {
+                document.getElementById('prevBtn').style.display = 'none';
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('acceptBtn').style.display = 'none';
+            } else if (currentPage === 2) {
+                document.getElementById('prevBtn').style.display = 'block';
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('acceptBtn').style.display = 'none';
+            } else if (currentPage === 3) {
+                document.getElementById('prevBtn').style.display = 'block';
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('acceptBtn').style.display = 'block';
+            }
+        }
+
+        agreeCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                acceptBtn.removeAttribute('disabled');
+            } else {
+                acceptBtn.setAttribute('disabled', 'true');
+            }
+        });
+// ================= TERMS SUBMIT (REDIRECT TO REG.HTML) =================
+    function handleTermsSubmit(event) {
+    event.preventDefault();
+    const agreeCheckbox = document.getElementById('agreeCheckbox');
+
+    if (agreeCheckbox && agreeCheckbox.checked) {
+        window.location.href = "reg.html";
+    }
+}
+    </script>
+    
+</body>
+
+</html>

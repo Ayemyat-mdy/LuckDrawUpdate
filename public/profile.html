@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #f7f7f7; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .profile-card { background-color: #ffffff; width: 100%; max-width: 420px; padding: 35px 20px; border-radius: 24px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+        .avatar-circle { width: 90px; height: 90px; background-color: #f1f3f6; border: 2px solid #eaeaea; border-radius: 50%; margin: 0 auto 15px; display: flex; justify-content: center; align-items: center; }
+        .avatar-circle i { font-size: 45px; color: #4a5568; }
+        .display-name { font-size: 24px; font-weight: 700; color: #1a202c; margin-bottom: 6px; }
+        .id-tag { display: inline-block; background-color: #edf2f7; color: #4a5568; padding: 6px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 25px; }
+        .line-divider { height: 1px; background-color: #e2e8f0; margin-bottom: 25px; }
+        .info-row { display: flex; align-items: center; background-color: #fff; border: 1px solid #edf2f7; border-radius: 16px; padding: 15px; margin-bottom: 14px; text-align: left; }
+        .icon-box { width: 35px; font-size: 18px; color: #1a202c; display: flex; justify-content: center; }
+        .info-details { margin-left: 12px; }
+        .info-title { font-size: 11px; text-transform: uppercase; color: #718096; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .info-text { font-size: 15px; color: #1a202c; font-weight: 600; }
+        .action-button { display: flex; justify-content: center; align-items: center; width: 100%; padding: 14px; border-radius: 16px; font-size: 16px; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
+        .edit-btn { background-color: #ffffff; border: 1px solid #cbd5e0; color: #2d3748; margin-top: 20px; margin-bottom: 12px; }
+        .edit-btn i, .logout-btn i { margin-right: 8px; }
+        .logout-btn { background-color: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; }
+        .logout-btn:hover { background-color: #fed7d7; }
+    </style>
+</head>
+<body>
+
+    <div class="profile-card">
+        <div class="avatar-circle"><i class="fa-solid fa-user-astronaut"></i></div>
+        <div class="display-name" id="userName">Loading...</div>
+        <div class="id-tag">User ID: #<span id="userId">----</span></div>
+        <div class="line-divider"></div>
+
+        <div class="info-row">
+            <div class="icon-box"><i class="fa-solid fa-phone"></i></div>
+            <div class="info-details">
+                <div class="info-title">Phone Number</div>
+                <div class="info-value info-text" id="userPhone">Loading...</div>
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="icon-box"><i class="fa-solid fa-envelope"></i></div>
+            <div class="info-details">
+                <div class="info-title">Email Address</div>
+                <div class="info-value info-text" id="userEmail">Loading...</div>
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="icon-box"><i class="fa-solid fa-cake-candles"></i></div>
+            <div class="info-details">
+                <div class="info-title">Age</div>
+                <div class="info-value info-text" id="userAge">Loading...</div>
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div class="icon-box"><i class="fa-solid fa-briefcase"></i></div>
+            <div class="info-details">
+                <div class="info-title">Occupation / Status</div>
+                <div class="info-value info-text" id="userStatus">Loading...</div>
+            </div>
+        </div>
+
+       <!-- <button class="action-button edit-btn"><i class="fa-regular fa-pen-to-square"></i> Edit Profile</button>-->
+        <button class="action-button logout-btn" id="profileLogoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</button>
+    </div>
+
+    <script src="profile-script.js"></script>
+</body>
+</html>

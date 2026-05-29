@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Game Map - Centered Character Version</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="home-style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
+</head>
+
+<body>
+
+    <video autoplay loop muted playsinline class="body-bg-video">
+        <source src="sakura video.mp4" type="video/mp4">
+    </video>
+
+    <div class="phone-container">
+
+        <header>
+            <div class="navbar">
+                <div class="logo-wrapper">
+                    <img src="MABA 10th anniversary logo.png" alt="Logo" class="main-logo">
+                </div>
+                <ul>
+                    <li>
+                        <a href="login.html" id="login-link">
+                            <i class="fas fa-user" style="margin-right: 5px;"></i><span id="nav-username">Login</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="menu-trigger"><i class="fas fa-bars"></i></a>
+                        <div class="menu" id="dropdown-menu">
+                            <ul>
+                                <li><a href="#" id="profile-menu-item">Profile</a></li>
+                                <li><a href="game.html">gamelist</a></li>
+                                <li><a href="rank.html">winner list</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </header>
+
+        <main class="content">
+            <h2 class="session-title" id="displaySessionTitle">GAME SESSION</h2>
+            <div class="timer-card" id="timer">02:00:00</div>
+
+            <div class="game-map">
+                <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid meet">
+
+                    <path
+                        d="M 60 40 H 340 C 380 40, 380 120, 340 120 H 180 C 140 120, 140 200, 180 200 H 340 C 380 200, 380 280, 340 280 H 60 C 20 280, 20 360, 60 360 H 340 C 380 360, 380 440, 340 440 H 220"
+                        fill="none" stroke="#666" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
+                    <path
+                        d="M 60 40 H 340 C 380 40, 380 120, 340 120 H 180 C 140 120, 140 200, 180 200 H 340 C 380 200, 380 280, 340 280 H 60 C 20 280, 20 360, 60 360 H 340 C 380 360, 380 440, 340 440 H 220"
+                        fill="none" stroke="#ffeb3b" stroke-width="2" stroke-dasharray="8,8" stroke-linecap="round" />
+
+                    <circle cx="60" cy="40" r="16" fill="#757575" stroke="#fff" stroke-width="4" class="map-node"
+                        data-index="0" />
+                    <circle cx="200" cy="40" r="16" fill="#fff" stroke="#666" stroke-width="4" class="map-node"
+                        data-index="1" />
+                    <circle cx="340" cy="40" r="16" fill="#fff" stroke="#666" stroke-width="4" class="map-node"
+                        data-index="2" />
+                    <circle cx="260" cy="120" r="16" fill="#fff" stroke="#666" stroke-width="4" class="map-node"
+                        data-index="3" />
+                    <circle cx="200" cy="200" r="16" fill="#fff" stroke="#666" stroke-width="4" class="map-node"
+                        data-index="4" />
+                    <circle cx="340" cy="200" r="16" fill="#fff" stroke="#666" stroke-width="4" class="map-node"
+                        data-index="5" />
+                    <circle cx="260" cy="280" r="16" fill="#fff" stroke="#666" stroke-width="4" class="map-node"
+                        data-index="6" />
+                    <circle cx="100" cy="280" r="16" fill="#fff" stroke="#666" stroke-width="4" class="map-node"
+                        data-index="7" />
+                    <circle cx="160" cy="360" r="16" fill="#fff" stroke="#666" stroke-width="4" class="map-node"
+                        data-index="8" />
+                    <circle cx="340" cy="360" r="16" fill="#fff" stroke="#666" stroke-width="4" class="map-node"
+                        data-index="9" />
+                    <circle cx="300" cy="440" r="16" fill="#fff" stroke="#666" stroke-width="4" class="map-node"
+                        data-index="10" />
+                    <circle cx="220" cy="440" r="16" fill="#fff" stroke="#666" stroke-width="4" class="map-node"
+                        data-index="11" />
+
+                    <defs>
+                        <clipPath id="circle-clip">
+                            <circle id="clip-inner-circle" cx="100" cy="40" r="100" />
+                        </clipPath>
+                    </defs>
+
+                    <g id="player-group" class="pulse-character">
+                        <g id="player-click-target" style="pointer-events: all; cursor: pointer;">
+                            <circle id="player-char" cx="100" cy="40" r="35" fill="#fff" stroke="#fff"
+                                stroke-width="1" />
+                            <image id="player-icon" href="1.png" x="37" y="17" width="46" height="46"
+                                clip-path="url(#circle-clip)" preserveAspectRatio="xMidYMid slice" />
+                        </g>
+
+                        <foreignObject id="player-input-box" x="-20" y="-22" width="160" height="35">
+                            <div class="input-wrapper">
+                                <input type="text" class="char-top-input" placeholder="Code...">
+                                <button type="button" class="input-submit-btn">
+                                    <i class="fa-solid fa-check"></i>
+                                </button>
+                            </div>
+                        </foreignObject>
+                    </g>
+                </svg>
+            </div>
+
+            <button class="go-btn" disabled>GO</button>
+        </main>
+
+        <footer class="footer">
+            <a href="./prizedisplay.html">
+                <button class="nav-btn-circle prize-btn">
+                    <div class="btn-icon-wrap"><i class="fa-solid fa-gift"></i></div>
+                    <span class="btn-label"></span>
+                </button>
+            </a>
+            <a href="./rank.html">
+                <button class="nav-btn-circle rank-btn" onclick="window.location.href='rank.html'">
+                    <div class="btn-icon-wrap"><i class="fa-solid fa-trophy"></i></div>
+                    <span class="btn-label"></span>
+                </button>
+            </a>
+        </footer>
+
+        <div class="copyright">© Metro IT (Knowledge Key)</div>
+    </div>
+
+    <script src="home-script.js"></script>
+
+    <script>
+        const socket = io("http://192.168.21.168:3000"); // သင်၏ Server URL ထည့်ပါ
+
+        // ဆာဗာဆီမှ sessionNameBroadCast ပွဲထွက်လာလျှင် ၎င်းနာမည်အတိုင်း ခေါင်းစဉ်ကို ပြောင်းလဲပေးခြင်း
+        socket.on("sessionNameBroadcast", (data) => {
+            if (data && data.sessionName) {
+                document.getElementById("displaySessionTitle").innerText = data.sessionName.toUpperCase();
+            }
+        });
+    </script>
+</body>
+
+</html>

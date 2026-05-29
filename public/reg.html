@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration - Mandalay-Japan Festival</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2 family=Playfair+Display:ital,wght@0,700;1,400&family=Segoe+UI:wght@400;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           Reset and Base Styles 
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body,
+        html {
+            min-height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            /* နူးညံ့တဲ့ ပန်းရောင် Gradient နောက်ခံ */
+            background: linear-gradient(135deg, #ffeef2 0%, #ffd1dc 100%);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ==========================================================================
+           Sakura Falling Animation (ပန်းပွင့်လေးများ ကြွေကျခြင်း)
+           ========================================================================== */
+        .sakura-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            /* ဖောင်နှိပ်ရတာ မနှောင့်ယှက်စေရန် */
+            z-index: 1;
+        }
+
+        .petal {
+            position: absolute;
+            background: linear-gradient(to bottom right, #ffb7c5, #ff9ebb);
+            border-radius: 15px 1px 15px 12px;
+            /* ချယ်ရီပန်းပွင့်ပုံစံ Shape */
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+
+        /* ပန်းပွင့်လေးများ တယောက်စီ မတူညီတဲ့ အရွယ်အစား၊ နေရာနဲ့ အမြန်နှုန်းဖြင့် ကျလာစေရန် */
+        .petal:nth-child(1) {
+            left: 10%;
+            width: 12px;
+            height: 9px;
+            animation-duration: 7s;
+            animation-delay: 0s;
+        }
+
+        .petal:nth-child(2) {
+            left: 25%;
+            width: 16px;
+            height: 12px;
+            animation-duration: 9s;
+            animation-delay: 2s;
+        }
+
+        .petal:nth-child(3) {
+            left: 40%;
+            width: 10px;
+            height: 8px;
+            animation-duration: 6s;
+            animation-delay: 1s;
+        }
+
+        .petal:nth-child(4) {
+            left: 55%;
+            width: 14px;
+            height: 11px;
+            animation-duration: 8s;
+            animation-delay: 3s;
+        }
+
+        .petal:nth-child(5) {
+            left: 70%;
+            width: 18px;
+            height: 14px;
+            animation-duration: 11s;
+            animation-delay: 0.5s;
+        }
+
+        .petal:nth-child(6) {
+            left: 85%;
+            width: 12px;
+            height: 9px;
+            animation-duration: 7.5s;
+            animation-delay: 4s;
+        }
+
+        .petal:nth-child(7) {
+            left: 95%;
+            width: 15px;
+            height: 12px;
+            animation-duration: 10s;
+            animation-delay: 1.5s;
+        }
+
+        .petal:nth-child(8) {
+            left: 15%;
+            width: 14px;
+            height: 11px;
+            animation-duration: 8.5s;
+            animation-delay: 5s;
+        }
+
+        .petal:nth-child(9) {
+            left: 50%;
+            width: 16px;
+            height: 12px;
+            animation-duration: 9.5s;
+            animation-delay: 4.5s;
+        }
+
+        .petal:nth-child(10) {
+            left: 80%;
+            width: 11px;
+            height: 8px;
+            animation-duration: 6.5s;
+            animation-delay: 2.5s;
+        }
+
+        @keyframes fall {
+            0% {
+                top: -10%;
+                transform: translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
+            }
+
+            90% {
+                opacity: 0.8;
+            }
+
+            100% {
+                top: 110%;
+                transform: translateX(80px) rotate(360deg);
+                /* လေထဲဝဲပြီး ကျလာမည့်ပုံစံ */
+                opacity: 0;
+            }
+        }
+
+        /* ==========================================================================
+           Glassmorphism Form Container (နောက်ခံ ကြည်ကြည်လင်လင်ပေါ်စေရန်)
+           ========================================================================== */
+        .form-container {
+            background: rgba(255, 255, 255, 0.4);
+            /* အနောက်က ပန်းပွင့်တွေ မြင်ရအောင် ပိုကြည်လင်ပေးထားသည် */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 25px 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 440px;
+            box-shadow: 0 15px 35px rgba(255, 158, 187, 0.25);
+            /* ပန်းရောင်ဆန်သော အရိပ်ထည့်ထားသည် */
+            color: #000000;
+            position: relative;
+            z-index: 10;
+            /* ပန်းပွင့်များ၏ အပေါ်မှာ ရှိနေစေရန် */
+            animation: fadeIn 0.4s ease forwards;
+        }
+
+        /* --- Compact Festival Banner Section --- */
+        .festival-banner {
+            text-align: center;
+            position: relative;
+            padding: 0;
+            margin-bottom: 12px;
+        }
+
+        .logo-wrapper {
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        .logo-wrapper img {
+            max-width: 95px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .banner-subtitle {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: #333333;
+            margin-bottom: 4px;
+            text-transform: capitalize;
+            letter-spacing: 0.3px;
+        }
+
+        .banner-title {
+            font-family: 'Playfair Display', 'Georgia', serif;
+            font-size: 21px;
+            font-weight: 700;
+            color: #000000;
+            line-height: 1.25;
+            margin-bottom: 4px;
+        }
+
+        .banner-invitation {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-style: italic;
+            font-size: 14px;
+            color: #c44569;
+            /* စာသားကို ချယ်ရီပန်းရောင်ရင့် ပြောင်းထားသည် */
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .banner-skyline-divider {
+            width: 100%;
+            height: 10px;
+            border-bottom: 1px solid #ff9ebb;
+            /* ပန်းရောင်လိုင်းပြောင်းထားသည် */
+            margin-bottom: 15px;
+        }
+
+        /* Form Main Heading */
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 18px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #c44569;
+            /* ခေါင်းစဉ်ကို ချယ်ရီပန်းရောင် ပြောင်းထားသည် */
+            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Form Groups Layout */
+        .form-group {
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #222222;
+        }
+
+        /* Inputs & Customization */
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(196, 69, 105, 0.2);
+            /* နူးညံ့သော ပန်းရောင်ဘောင် */
+            border-radius: 8px;
+            color: #000000;
+            font-size: 14.5px;
+            font-weight: 600;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+
+        .form-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg fill='%23c44569' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+            background-repeat: no-repeat;
+            background-position: calc(100% - 10px) center;
+            padding-right: 30px;
+        }
+
+        .form-group input::placeholder {
+            color: rgba(0, 0, 0, 0.45);
+        }
+
+        .form-group select option {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #c44569;
+            box-shadow: 0 0 6px rgba(196, 69, 105, 0.3);
+        }
+
+        /* Conditional Section Wrap */
+        .dynamic-field {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Compact Error Messaging */
+        .error-msg {
+            color: #b30000;
+            font-size: 11.5px;
+            font-weight: 700;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: none;
+            width: 100%;
+            padding-left: 2px;
+        }
+
+        /* Submit Button Elements */
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #c44569;
+            /* Theme နှင့် ကိုက်ညီသော Submit Button */
+            border: none;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(196, 69, 105, 0.3);
+            margin-top: 5px;
+        }
+
+        .submit-btn:hover {
+            background: #a83353;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(196, 69, 105, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #444444;
+        }
+
+        .switch-form a {
+            color: #c44569;
+            text-decoration: none;
+            margin-left: 3px;
+        }
+
+        .switch-form a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive View Adjustments */
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 20px 22px;
+            }
+
+            .banner-title {
+                font-size: 19px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sakura-container">
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+        <div class="petal"></div>
+    </div>
+
+    <div class="form-container">
+
+        <div class="festival-banner">
+            <div class="logo-wrapper">
+                <img src="MABA 10th anniversary logo.png" alt="MABA 10th Anniversary Logo">
+            </div>
+
+            <h3 class="banner-subtitle">
+                <span style="color: #0000cc;">Myanmar</span>-<span style="color: #cc0000">Japan</span> <span
+                    style="color: #000000;">Alliance Business Association</span>
+            </h3>
+
+            <h3 class="banner-title">Mandalay-Japan Festival & <br>SME Bazaar</h3>
+
+
+            <div class="banner-skyline-divider"></div>
+        </div>
+
+        <h2>Register</h2>
+
+        <form id="registrationForm">
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Enter your username" required>
+            </div>
+            <div class="error-msg" id="usernameError">Username must contain only alphabetic characters.</div>
+
+            <div class="form-group">
+                <label for="regPhone">Phone Number</label>
+                <input type="tel" id="regPhone" placeholder="09_________" maxlength="12" inputmode="numeric" required>
+            </div>
+            <div class="error-msg" id="regPhoneError">Phone must start with 09- followed by 7 to 9 digits.</div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email (Optional)">
+            </div>
+            <div class="error-msg" id="emailError">Please enter a valid email address structure.</div>
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="text" id="age" placeholder="Enter your age" required>
+            </div>
+            <div class="error-msg" id="ageError">Age must be a number between 10 and 80.</div>
+
+            <div class="form-group">
+                <label for="occupation">Are you Currently Working or Studying?</label>
+                <select id="occupation" required>
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="work">Working</option>
+                    <option value="study">Studying</option>
+                    <option value="free">Free / Other</option>
+                </select>
+            </div>
+
+            <div id="workField" class="form-group dynamic-field">
+                <label for="jobTitle">Job Title</label>
+                <input type="text" id="jobTitle" placeholder="e.g., Software Engineer">
+            </div>
+
+            <div id="studyField" class="form-group dynamic-field">
+                <label for="schoolName">School Name</label>
+                <input type="text" id="schoolName" placeholder="e.g., Harvard University">
+            </div>
+
+            <!--- <button type="submit" id='registrationForm' class="submit-btn">Create Account</button>-->
+            <button type="submit" class="submit-btn">Create Account</button>
+            <div class="switch-form">
+                Already have an account?<a href="login.html">Login here</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="my">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Game Schedule & Game Sessions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* မင်းပေးထားတဲ့ Styles အတိုင်းပဲ အကုန်ထားပေးထားတယ် */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Pyidaungsu', Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            position: relative;
+            background-color: #0f172a;
+            overflow-x: hidden;
+        }
+
+        .video-bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .video-bg-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(254, 219, 237, 0.5) 0%, rgba(253, 242, 248, 0.85) 100%);
+            z-index: -1;
+        }
+
+        .flyer-container {
+            width: 100%;
+            max-width: 680px;
+            position: relative;
+            z-index: 1;
+            margin: 0 auto;
+            padding-top: 20px;
+        }
+
+        /* Glassmorphism Content Card */
+        .content-card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 32px;
+            padding: 24px 16px;
+            box-shadow: 0 20px 40px rgba(157, 23, 77, 0.05);
+            width: 100%;
+            margin-bottom: 25px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        .main-logo {
+            height: 80px;
+            width: auto;
+        }
+
+        .association-name {
+            font-size: 0.85rem;
+            color: #b91c64;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .main-title {
+            font-size: 1.8rem;
+            color: #1e293b;
+            font-weight: 800;
+        }
+
+        .main-heading {
+            font-size: 18px;
+            font-weight: 800;
+            color: #0f172a;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .sub-heading {
+            font-size: 14px;
+            color: #334155;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-bottom: 25px;
+            border-radius: 12px;
+        }
+
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+        }
+
+        .schedule-table th {
+            background-color: #fce7f3;
+            padding: 14px;
+            text-align: left;
+            border: 1px solid #fbcfe8;
+        }
+
+        .schedule-table td {
+            padding: 14px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .cell-blue {
+            background-color: #e0f2fe;
+        }
+
+        .cell-green {
+            background-color: #dcfce7;
+        }
+
+        .cell-gold {
+            background-color: #fef08a;
+            font-weight: 700;
+        }
+
+        .rank-link {
+            color: #be185d;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .auth-links-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn-auth-link {
+            padding: 14px;
+            font-weight: 700;
+            border-radius: 12px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-login-link {
+            background-color: #ffffff;
+            border: 2px solid #be185d;
+            color: #be185d;
+        }
+
+        .btn-register-link {
+            background-color: #be185d;
+            color: #ffffff;
+        }
+
+        .footer-artwork {
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+
+        .footer-img {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            margin-bottom: 5px;
+        }
+
+        .copyright {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* ဖုန်းမျက်နှာပြင်အတွက်သာ Font Size ကို အနည်းငယ် ပြင်ပေးထားခြင်း */
+        @media only screen and (max-width: 480px) {
+            .main-title {
+                font-size: 1.4rem;
+            }
+
+            .main-heading {
+                font-size: 15px;
+            }
+
+            .schedule-table th,
+            .schedule-table td {
+                padding: 8px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="video-bg-container">
+        <video autoplay loop muted playsinline>
+            <source src="sakura video.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="video-overlay"></div>
+
+    <div class="flyer-container">
+        <main class="content-card">
+            <header class="header">
+                <img src="MABA 10th anniversary logo.png" alt="MABA Logo" class="main-logo">
+                <p class="association-name">Myanmar-Japan Alliance Business Association</p>
+                <h1 class="main-title">Mandalay-Japan Festival &<br>SME Bazaar</h1>
+            </header>
+
+            <h1 class="main-heading">Bingo Game ပွဲတော်အချိန်ဇယား</h1>
+            <div class="table-container">
+                <table class="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>နေ့ရက်</th>
+                            <th>Session</th>
+                            <th>အချိန်</th>
+                            <th>မှတ်ချက်</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="date-cell cell-blue" rowspan="3">Jun 6, 2026</td>
+                            <td class="cell-blue">Session (1)</td>
+                            <td class="cell-blue">11:00 AM - 12:00 PM</td>
+                            <td class="cell-blue">
+                                <a href="rank.html?session=1" class="rank-link"><i class="fa-solid fa-trophy"></i>
+                                    Winners (20)</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="cell-blue">Session (2)</td>
+                            <td class="cell-blue">02:00 PM - 03:00 PM</td>
+                            <td class="cell-blue">
+                                <a href="rank.html?session=2" class="rank-link"><i class="fa-solid fa-trophy"></i>
+                                    Winners (20)</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="cell-blue">Session (3)</td>
+                            <td class="cell-blue">05:00 PM - 06:00 PM</td>
+                            <td class="cell-blue">
+                                <a href="rank.html?session=3" class="rank-link"><i class="fa-solid fa-trophy"></i>
+                                    Winners (20)</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="date-cell cell-green" rowspan="2">Jun 7, 2026</td>
+                            <td class="cell-green">Session (4)</td>
+                            <td class="cell-green">11:00 AM - 12:00 PM</td>
+                            <td class="cell-green">
+                                <a href="rank.html?session=4" class="rank-link"><i class="fa-solid fa-trophy"></i>
+                                    Winners (20)</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="cell-green">Session (5)</td>
+                            <td class="cell-green">02:00 PM - 03:00 PM</td>
+                            <td class="cell-green">
+                                <a href="rank.html?session=5" class="rank-link"><i class="fa-solid fa-trophy"></i>
+                                    Winners (20)</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="cell-gold"></td>
+                            <td class="cell-gold">Grand Final Session</td>
+                            <td class="cell-gold">05:00 PM - 06:00 PM</td>
+                            <td class="cell-gold">
+                                <a href="rank.html?session=6" class="rank-link"><i class="fa-solid fa-trophy"></i>
+                                    Winners (20)</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="auth-links-grid">
+                <a href="login.html" class="btn-auth-link btn-login-link">Login</a>
+                <a href="terms.html" class="btn-auth-link btn-register-link">Register</a>
+            </div>
+
+            <div class="footer-artwork">
+                <img src="Torii & Firework.png" alt="Footer Illustration" class="footer-img">
+                <p class="copyright">&copy; Metro IT (Knowledge Key)</p>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>

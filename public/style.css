@@ -1,0 +1,490 @@
+/* ==========================================================================
+   1. RESET & BASE STYLES
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body, html {
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden; /* ဘေးသို့ လုံးဝ ထွက်မသွားစေရန် */
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px; /* ဖုန်း screen ပေါ်တွင် ဘေးဘောင် လွတ်စေရန် */
+    position: relative;
+}
+
+/* Main Layout Wrapper */
+.main-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    position: relative;
+    z-index: 10;
+}
+
+/* Background Video Styles */
+#video-background {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    z-index: -100;
+    object-fit: cover;
+}
+
+/* ==========================================================================
+   2. LOGO & TEXT DESIGN (လိုဂို ကြီးကြီးလန်းလန်း စနစ်)
+   ========================================================================== */
+.logo-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 4px; 
+    text-align: center;
+    padding: 0 10px;
+}
+
+.app-logo {
+    width: 35%; 
+    min-width: 90px;  
+    max-width: 140px; /* PC ပေါ်တွင် လိုဂိုကို အားရပါးရ ကြီးကြီးမြင်ရစေရန် */
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0px 6px 12px rgba(0, 0, 0, 0.2)); 
+    margin-bottom: 8px;
+}
+
+.logo-subtext-top {
+    font-size: clamp(8.5px, 2vw, 11px); 
+    font-weight: 700;
+    color: #cc295f; 
+    letter-spacing: 0.3px;
+    margin-bottom: 3px;
+}
+
+.logo-main-title {
+    font-size: clamp(13.5px, 3.5vw, 17px); 
+    font-weight: 800;
+    color: #111e2e;
+    line-height: 1.25;
+}
+
+/* ==========================================================================
+   3. FULLY FLEXIBLE BOX CONTAINER (Login & Register Form)
+   ========================================================================== */
+.form-container {
+    background: rgba(255, 255, 255, 0.25); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    
+    /* Padding ကို Flexible ဖြစ်အောင် ညှိထားပြီး အောက်ခြေပုံအတွက် bottom ကို 0 ပေးထားသည် */
+    padding: 5vw 6vw 0vw 6vw; 
+    
+    border-radius: 24px;
+    width: 100%;
+    max-width: 440px; 
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    color: #000000;
+    position: relative;
+    overflow: hidden; /* အောက်ခြေပုံ ဘောင်ကွေးအောက် ကွက်တိဝင်စေရန် */
+    animation: fadeIn 0.4s ease forwards;
+} 
+
+.form-container h2 {
+    text-align: center;
+    margin-top: -15px;       /* Login အာရုံစိုက်မှုကို အပေါ်သို့ ကပ်တင်လိုက်သည် */
+    margin-bottom: 14px;   
+    font-size: clamp(22px, 5vw, 28px); 
+    font-weight: 700;
+    color: #000000;
+}
+
+/* Form Groups Layout */
+.form-group {
+    margin-bottom: 12px; 
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+}
+
+.form-group.column-layout {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: clamp(12px, 3vw, 14px);
+    font-weight: 600;
+    color: #000000;
+    flex: 0 0 105px; 
+}
+
+.form-group.column-layout label {
+    flex: none;
+    width: 100%;
+}
+
+/* Input Fields & Select Customization */
+.form-group input, 
+.form-group select {
+    flex: 1;
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    color: #000000; 
+    font-size: clamp(14px, 3.5vw, 15px);
+    font-weight: 600;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+/* Dropdown Arrow for Select */
+.form-group select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 12px) center;
+    padding-right: 35px;
+}
+
+.form-group input::placeholder {
+    color: rgba(0, 0, 0, 0.55);
+    opacity: 1;
+}
+
+.form-group select option {
+    background: #ffffff;
+    color: #000000;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: #000000;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Conditional Section Wrap */
+.dynamic-field {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Validation Error Messaging */
+.error-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -10px;
+    margin-bottom: 8px;
+}
+.error-msg {
+    color: #cc0000;
+    font-size: 11px;
+    font-weight: 600;
+    display: none;
+    width: calc(100% - 115px); 
+}
+
+/* Submit Button Elements */
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    color: #000000;
+    font-size: clamp(14px, 3.5vw, 15px);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 6px;
+}
+
+.submit-btn:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+/* Form Switch Link Style */
+.switch-form {
+    text-align: center;
+    margin-top: 10px;
+    font-size: clamp(11px, 3vw, 13px);
+    font-weight: 600;
+    margin-bottom: 8px; 
+}
+
+.switch-form a {
+    color: #000000;
+    text-decoration: underline;
+    margin-left: 5px;
+}
+
+.switch-form a:hover {
+    color: #444444;
+}
+
+/* ==========================================================================
+   4. FULLY FLEXIBLE BOTTOM SCENERY (အောက်ခြေပုံ ကွက်တိပေါ်မည့်အပိုင်း)
+   ========================================================================== */
+.bottom-scenery-wrapper {
+    width: calc(100% + 12vw); /* Container Padding အကျယ်အတိုင်း ကွက်တိချဲ့ခြင်း */
+    margin-left: -6vw;        /* ဘယ်ဘက်အစွန်း ကပ်ခြင်း */
+    margin-top: 12px;         
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    line-height: 0;           
+}
+
+.bottom-scenery {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    vertical-align: bottom;
+}
+
+/* ==========================================================================
+   5. TERMS & CONDITIONS SPECIFIC STYLES
+   ========================================================================== */
+.form-container.terms-container {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 30px 24px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 600px; 
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    color: #000000;
+}
+
+.terms-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111111;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Progress Bar */
+.progress-container {
+    width: 100%;
+    height: 5px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 33.33%;
+    height: 100%;
+    background: #000000;
+    transition: width 0.3s ease;
+}
+
+/* Pages Dynamic Switching */
+.terms-page {
+    display: none;
+}
+
+.terms-page.active {
+    display: block;
+    animation: slideIn 0.3s ease forwards;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(15px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* Text Content Area */
+.terms-content {
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    padding: 18px;
+    max-height: 320px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.intro-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #111111;
+}
+
+.terms-divider {
+    border: 0;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.12);
+    margin: 12px 0;
+}
+
+.terms-content h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin-top: 15px;
+    margin-bottom: 6px;
+}
+
+.terms-content p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #222222;
+    margin-bottom: 10px;
+}
+
+/* Checkbox on last page */
+.checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.checkbox-group label {
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+/* Navigation Buttons */
+.btn-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 13px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.back-btn {
+    background: rgba(0, 0, 0, 0.08);
+    color: #000000;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.next-btn, .form-container.terms-container .submit-btn {
+    background: #ffffff;
+    color: #000000;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.next-btn:hover, .form-container.terms-container .submit-btn:hover:not(:disabled) {
+    background: #000000;
+    color: #ffffff;
+}
+
+.submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ==========================================================================
+   6. SMART MEDIA QUERIES (ဖုန်းမျက်နှာပြင်များအတွက် ညှိနှိုင်းမှုစနစ်)
+   ========================================================================== */
+@media (max-width: 480px) {
+    /* Login & Register Container Mobile Mod */
+    .form-container {
+        padding: 6vw 5vw 0vw 5vw; 
+        border-radius: 20px;
+    }
+    
+    .app-logo {
+        max-width: 110px; /* ဖုန်းပေါ်တွင်လည်း သေးမသွားဘဲ ထင်ထင်ရှားရှား ကြီးပေးထားပါသည် */
+    }
+
+    .bottom-scenery-wrapper {
+        width: calc(100% + 10vw);
+        margin-left: -5vw;
+        margin-top: 10px;
+    }
+    
+    /* ဖုန်းပေါ်တွင် ဘေးတိုက် ကျပ်မနေစေရန် Row မှ Column သို့ ပြောင်းလဲခြင်း */
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+        margin-bottom: 10px;
+    }
+    
+    .form-group label {
+        flex: none;
+        width: 100%;
+    }
+
+    .error-msg {
+        width: 100%;
+    }
+
+    /* Terms & Conditions Container Mobile Mod */
+    .form-container.terms-container {
+        padding: 22px 16px;
+        border-radius: 20px;
+    }
+    .form-container.terms-container h2 {
+        font-size: 19px;
+    }
+    .terms-content {
+        max-height: 280px;
+        padding: 14px;
+    }
+    .action-btn {
+        padding: 11px;
+        font-size: 14px;
+    }
+}

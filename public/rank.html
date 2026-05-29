@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Ranking Screen</title>
+    <link rel="stylesheet" href="ranking_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .footer {
+            display: flex;
+            justify-content: space-between; /* ခလုတ်များကို တစ်ဖက်တစ်ချက်စီ ခွဲထုတ်ရန် */
+            align-items: center;
+            width: 100%;
+            padding: 10px 20px;
+            box-sizing: border-box;
+        }
+
+        /* 🌟 ဓာတ်ပုံထဲကအတိုင်း ပြင်ဆင်ထားသော Spin Wheel Container */
+        .spin-wheel-container {
+            position: relative;
+            width: 55px;
+            height: 65px; /* Stand ပါဝင်ရန် အမြင့်ကို ပိုပေးထားပါတယ် */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .spin-wheel-container:hover {
+            transform: scale(1.1); /* Mouse တင်လျှင် အနည်းငယ် ကြီးလာစေရန် */
+        }
+
+        /* လှည့်ပတ်မည့် ကံစမ်းမဲဘီး (အနီ/အဖြူ အကန့်များ) */
+        .lucky-wheel {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            /* ရွှေရောင်အနားသတ် */
+            border: 3px solid #d4af37; 
+            /* အနီနှင့် အဖြူ စိပ်စိပ်စပ်ထားသော ရလဒ်ထွက်စေရန် Conic Gradient သုံးထားခြင်း */
+            background: conic-gradient(
+                #ff4757 0deg 30deg, #ffffff 30deg 60deg,
+                #ff4757 60deg 90deg, #ffffff 90deg 120deg,
+                #ff4757 120deg 150deg, #ffffff 150deg 180deg,
+                #ff4757 180deg 210deg, #ffffff 210deg 240deg,
+                #ff4757 240deg 270deg, #ffffff 270deg 300deg,
+                #ff4757 300deg 330deg, #ffffff 330deg 360deg
+            );
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3), inset 0 0 4px rgba(0,0,0,0.2);
+            position: relative;
+            /* ဖြည်းဖြည်းချင်း လည်ပတ်နေစေရန် Animation ထည့်သွင်းခြင်း */
+            animation: wheel-spin 6s linear infinite;
+        }
+
+        /* ဘီးရဲ့အလယ်က ရွှေရောင်ခလုတ်ဝိုင်းအသေး */
+        .lucky-wheel::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(135deg, #ffe066, #b38f1b);
+            border-radius: 50%;
+            border: 1px solid #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+
+        /* ဓာတ်ပုံထဲကအတိုင်း အောက်က ရွှေရောင်ဒေါက်တိုင် (Stand) */
+        .wheel-stand {
+            width: 16px;
+            height: 10px;
+            background: linear-gradient(to right, #b38f1b, #ffe066, #b38f1b);
+            margin-top: -2px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* အောက်ခံပြား အဝိုင်း/အပြားတုံး */
+        .wheel-stand::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 28px;
+            height: 5px;
+            background: linear-gradient(to bottom, #ffe066, #d4af37);
+            border-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* ဘီးလည်ပတ်မည့် လှုပ်ရှားမှုပုံစံ */
+        @keyframes wheel-spin {
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <video autoplay loop muted playsinline class="body-bg-video">
+        <source src="sakura video.mp4" type="video/mp4">
+    </video>
+
+    <div class="phone-container">
+
+        <header class="header">
+            <div class="navbar">
+                <div class="logo-center-wrapper">
+                    <img src="MABA 10th anniversary logo.png" alt="Logo" class="main-logo">
+                </div>
+            </div>
+        </header>
+
+        <div class="ranking-list">
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Prize</th>
+                        <th>Session</th>
+                    </tr>
+                </thead>
+                <tbody id="rankingData">
+                    <tr>
+                        <td colspan="4" class="loading">Loading rankings...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+       <footer class="footer">
+    <a href="./home.html">
+        <button class="nav-btn home-btn">
+            <i class="fa-solid fa-house"></i>
+        </button>
+    </a>
+
+    <div class="spin-wheel-container" title="Go to Winner Login" onclick="goToWinnerLogin()">
+        <div class="lucky-wheel"></div>
+        <div class="wheel-stand"></div>
+    </div>
+</footer>
+
+        <div class="footer-text">
+            © Metro IT (Knowledge Key)
+        </div>
+    </div>
+
+    <script src="ranking_script.js"></script>
+</body>
+
+</html>

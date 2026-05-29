@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Spin - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0f172a; color: #f1f5f9; min-height: 100vh; padding: 30px 20px; display: flex; justify-content: center; align-items: flex-start; }
+        .admin-container { background: #1e293b; width: 100%; max-width: 950px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: 1px solid #334155; padding: 35px; margin-bottom: 50px; }
+        .admin-header { text-align: center; margin-bottom: 35px; border-bottom: 2px solid #334155; padding-bottom: 20px; }
+        .admin-header h1 { font-size: 28px; font-weight: 800; color: #ffd700; letter-spacing: 1px; }
+        .admin-header p { color: #94a3b8; font-size: 14px; margin-top: 5px; }
+        .top-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; margin-bottom: 35px; }
+        @media (max-width: 768px) { .top-grid { grid-template-columns: 1fr; } }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px; }
+        .form-control { width: 100%; background-color: #0f172a; border: 2px solid #334155; color: #fff; padding: 12px 16px; font-size: 16px; font-weight: 600; border-radius: 12px; outline: none; }
+        .time-badge { background: rgba(255, 215, 0, 0.1); border: 1px dashed #ffd700; color: #ffd700; padding: 12px; border-radius: 12px; font-weight: 700; text-align: center; }
+        .btn-submit { width: 100%; background: linear-gradient(135deg, #ffd700, #b38600); color: #0f172a; border: none; padding: 14px; font-size: 16px; font-weight: 700; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 15px rgba(179, 134, 0, 0.3); }
+        .live-panel { background: #0f172a; border-radius: 16px; padding: 25px; border: 1px solid #334155; text-align: center; }
+        .panel-title { font-size: 15px; color: #94a3b8; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .panel-title .dot { width: 8px; height: 8px; background-color: #10b981; border-radius: 50%; }
+        .timer-display { font-size: 46px; font-weight: 800; color: #fff; font-family: monospace; background: #1e293b; padding: 15px; border-radius: 12px; border: 1px solid #334155; }
+        .results-section { background: #0f172a; border-radius: 18px; padding: 25px; border: 1px solid #334155; }
+        .results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 15px; }
+        .results-header h2 { font-size: 18px; font-weight: 700; color: #ffd700; }
+        .count-badge { background: #334155; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .winner-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .winner-table th { padding: 12px 15px; color: #94a3b8; font-size: 13px; text-transform: uppercase; border-bottom: 2px solid #334155; }
+        .winner-table td { padding: 14px 15px; border-bottom: 1px solid #1e293b; font-size: 15px; }
+        .winner-table tr:hover { background: rgba(255, 255, 255, 0.02); }
+        .user-td { font-weight: 600; color: #ffffff; }
+        .phone-td { color: #cbd5e1; font-weight: 500; font-family: monospace; }
+        .prize-tag { display: inline-block; padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 700; }
+        .tag-diamond { background: rgba(0, 210, 255, 0.2); color: #00d2ff; }
+        .tag-gold { background: rgba(255, 215, 0, 0.2); color: #ffd700; }
+        .tag-silver { background: rgba(226, 232, 240, 0.2); color: #e2e8f0; }
+        .tag-bronze { background: rgba(205, 127, 50, 0.2); color: #cd7f32; }
+        .tag-consolation { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+        .no-data { text-align: center; color: #64748b; font-style: italic; padding: 30px !important; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1><i class="fa-solid fa-chart-line"></i> LUCKY SPIN ADMIN PANEL</h1>
+            <p>Database နှင့် တိုက်ရိုက်ချိတ်ဆက်ထားသော Real-time ကံထူးရှင်စာရင်း</p>
+        </div>
+
+        <div class="top-grid">
+            <div class="control-form">
+                <form id="sessionForm" onsubmit="handleSessionSubmit(event)">
+                    <div class="form-group">
+                        <label>ဘယ် Session အတွက်လဲ ရွေးချယ်ပါ</label>
+                        <select id="sessionSelect" class="form-control" onchange="loadRealtimeWinners()">
+                            <option value="1">Session 1</option>
+                            <option value="2">Session 2</option>
+                            <option value="3">Session 3</option>
+                            <option value="4">Session 4</option>
+                            <option value="5">Session 5</option>
+                            <option value="6">Session 6</option>
+                            <option value="7">Session 7</option>
+                            <option value="8">Session 8</option>
+                            <option value="9">Session 9</option>
+                            <option value="10">Session 10</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>သတ်မှတ်ချိန်</label>
+                        <div class="time-badge">မိနစ် ၃၀ တိတိ (30 Mins Fixed)</div>
+                    </div>
+                    <button type="submit" class="btn-submit">SESSION စတင်မည်</button>
+                </form>
+            </div>
+
+            <div class="live-panel">
+                <div class="panel-title">
+                    <div class="dot"></div> Live Countdown (<span id="currentActiveSession">Session 1</span>)
+                </div>
+                <div class="timer-display" id="countdownTimer">30:00</div>
+            </div>
+        </div>
+
+        <div class="results-section">
+            <div class="results-header">
+                <h2><i class="fa-solid fa-list-ol"></i> ပေါက်သွားသော Item နာမည်များနှင့် လူစာရင်း (Top 20)</h2>
+                <span class="count-badge" id="winnerCount">စုစုပေါင်း: 0 ဦး</span>
+            </div>
+
+            <table class="winner-table">
+                <thead>
+                    <tr>
+                        <th>စဉ်</th>
+                        <th>ကံထူးရှင်အမည် (User Name)</th>
+                        <th>ဖုန်းနံပါတ် (Phone No.)</th>
+                        <th>ရရှိသောဆု (Won Item)</th>
+                    </tr>
+                </thead>
+                <tbody id="winnerListTableBody">
+                    <tr><td colspan="4" class="no-data">ဒေတာများကို လှမ်းဆွဲနေပါသည်...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
+    <script>
+        let timerInterval;
+        const serverURL = window.location.hostname === "192.168.21.212" ? "http://192.168.21.212:3000" : "http://localhost:3000";
+        const socket = io(serverURL);
+
+        function getPrizeClass(prizeName) {
+            if (!prizeName) return "tag-consolation";
+            if (prizeName.includes("Diamond")) return "tag-diamond";
+            if (prizeName.includes("Gold")) return "tag-gold";
+            if (prizeName.includes("Silver")) return "tag-silver";
+            if (prizeName.includes("Bronze")) return "tag-bronze";
+            return "tag-consolation";
+        }
+
+        async function loadRealtimeWinners() {
+            const selectedSession = document.getElementById("sessionSelect").value;
+            document.getElementById("currentActiveSession").innerText = `Session ${selectedSession}`;
+            const tableBody = document.getElementById("winnerListTableBody");
+            
+            try {
+                const response = await fetch(`http://localhost:3009/api/winners/${selectedSession}`);
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.details || "API Error");
+                }
+                
+                const winners = await response.json();
+                document.getElementById("winnerCount").innerText = `စုစုပေါင်း: ${winners.length} ဦး`;
+
+                tableBody.innerHTML = ""; 
+
+                if (winners.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="4" class="no-data">Session ${selectedSession} အတွက် ဒေတာဘေ့စ်ထဲတွင် ဆုပေါက်သူစာရင်း မရှိသေးပါ။</td></tr>`;
+                } else {
+                    winners.slice(0, 20).forEach((user, index) => {
+                        const cssClass = getPrizeClass(user.prizename);
+                        const row = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td class="user-td">${user.username || 'Unknown'}</td>
+                                <td class="phone-td">${user.userph || 'N/A'}</td>
+                                <td><span class="prize-tag ${cssClass}">${user.prizename || 'Consolation'}</span></td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+                }
+            } catch (error) {
+                console.error("Error Detail:", error);
+                tableBody.innerHTML = `<tr><td colspan="4" class="no-data" style="color:#ef4444;">${error.message}. Server Console ကို ကြည့်ပြီး SQL Error ရှိမရှိ စစ်ပါ။</td></tr>`;
+            }
+        }
+
+        function startCountdown(durationInSeconds) {
+            clearInterval(timerInterval);
+            let timer = durationInSeconds;
+            const display = document.getElementById('countdownTimer');
+            timerInterval = setInterval(() => {
+                let minutes = parseInt(timer / 60, 10);
+                let seconds = parseInt(timer % 60, 10);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                display.innerText = minutes + ":" + seconds;
+                if (--timer < 0) {
+                    clearInterval(timerInterval);
+                    display.innerText = "SESSION ENDED";
+                }
+            }, 1000);
+        }
+
+      function handleSessionSubmit(event) {
+        event.preventDefault(); 
+        
+        // ရွေးချယ်ထားတဲ့ Session ID ကို ယူမယ်
+        const selectedSession = document.getElementById("sessionSelect").value;
+        
+        // ၁။ ဒေတာဘေ့စ်ထဲက ဒေတာတွေ ဆွဲတင်မယ်
+        loadRealtimeWinners(); 
+        
+        // ၂။ 🔴 Socket ကနေတစ်ဆင့် Server ဆီသို့ Session အသစ်စတင်ကြောင်း အကြောင်းကြားမယ်
+        socket.emit("startNewSession", { sessionId: selectedSession });
+        
+        // ၃။ Admin ကို game.html စာမျက်နှာသို့ ရွှေ့မယ်
+        window.location.href = "game.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        loadRealtimeWinners();
+        startCountdown(1800);
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+/* ==========================================
+   1. Universal Configuration & Body Styling
+   ========================================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.body-bg-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* ==========================================
+   2. Core Device Container Standard Viewports
+   ========================================== */
+.phone-container {
+    width: 390px;
+    height: 100vh;
+    max-height: 844px;
+    border-radius: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    /* overflow: hidden;  <-- ဒါကို ဖျက်ပြီး အောက်ကအတိုင်း အစားထိုးပါ */
+    overflow-y: auto;   /* အောက်ကို scroll ဆွဲလို့ရအောင် ဖွင့်ပေးတာ */
+    overflow-x: hidden;  /* ဘေးတိုက် screen ထွက်မကုန်အောင် ပိတ်တာ */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+/* ==========================================
+   3. Navbar Structure & Logo Scaling Fix
+   ========================================== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* ✨ Logo ကို Flexible ဖြစ်ပြီး ကြီးကြီးလန်းလန်းအပြည့်ပေါ်စေရန် ရေးဆွဲထားချက် */
+.logo-wrapper {
+      max-width: 55px;
+    height: auto;
+    object-fit: contain;
+}
+
+.main-logo {
+    width: 100%;
+    height: auto;
+    max-height: 75px;
+    /* Size ကို ကြီးကြီးလေးနဲ့ ပုံမပျက်အောင် ထိန်းပေးထားတယ် */
+    object-fit: contain;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.navbar ul li {
+    position: relative;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #4a4a4a;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease;
+}
+
+.navbar ul li a:hover {
+    color: #000;
+}
+
+.navbar li .menu {
+    position: absolute;
+    top: 130%;
+    right: 0;
+    width: 160px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(234, 114, 164, 0.15),
+        inset 0 4px 8px 0 rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    padding: 6px 0;
+}
+
+.navbar li .menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.navbar li .menu ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+}
+
+.navbar li .menu ul li {
+    width: 100%;
+}
+
+.navbar li .menu ul li a {
+    display: block;
+    width: 100%;
+    padding: 11px 16px;
+    color: #2c2c2c;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: left;
+}
+
+.navbar li .menu ul li a:hover {
+    background: rgba(255, 255, 255, 0.35);
+    color: #000;
+    box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+/* ==========================================
+   4. Main Content Component Structure
+   ========================================== */
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.session-title {
+    font-size: 1.3rem;
+    color: #212121;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.timer-card {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 5px 0;
+    border-radius: 30px;
+    text-align: center;
+    font-size: 2.3rem;
+    font-weight: 700;
+    color: #000000;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    margin-top: 21px;
+}
+
+/* ==========================================
+   5. Interactive Map Block Layout Fixes
+   ========================================== */
+.game-map {
+    width: 100%;
+    flex-grow: 1;
+    max-height: 45vh; /* 65vh ကနေ 45vh ကို လျှော့လိုက်တာကြောင့် အောက်က ခလုတ်တွေ အပေါ်တက်လာပါလိမ့်မယ် */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+    margin-top: 35px;
+}
+
+.game-map svg {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    overflow: visible !important;
+}
+
+/* ==========================================
+   6. Character Components Input Field Styling
+   ========================================== */
+.pulse-character {
+    transform-origin: var(--char-origin-x, 60px) var(--char-origin-y, 40px);
+    animation: characterBreathe 2s infinite ease-in-out;
+}
+
+@keyframes characterBreathe {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.04);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+#player-input-box {
+    display: none;
+    position: relative;
+    z-index: 9999 !important;
+}
+
+#player-group.show-input #player-input-box {
+    display: block;
+}
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff; /* 🌟 အနက်ကနေ အဖြူရောင် ပြောင်းလိုက်တယ် */
+    border-radius: 6px;
+    padding: 2px 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Shadow ကို နည်းနည်း လျှော့ပေးထားတယ် */
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+}
+
+.char-top-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: #000000; /* 🌟 Box ဖြူသွားလို့ စာသားကို အနက်ရောင် ပြောင်းလိုက်တယ် */
+    text-align: center;
+    outline: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 0 5px;
+    min-width: 0;
+}
+.map-node.stamp-success {
+    fill: #4caf50 !important;   /* အစိမ်းရောင် */
+    stroke: #ffffff !important; /* အဖြူရောင် အနားသတ် */
+    stroke-width: 4px !important;
+}
+
+.input-submit-btn {
+    background: rgb(246, 240, 240);
+    border: none;
+    color: #000000;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 4px 8px;
+    font-size: 16px;
+    flex-shrink: 0;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ==========================================
+   7. Footer Controls & Dual Bottom Buttons
+   ========================================== */
+.go-btn {
+    width: 45%;
+    background-color: #ffffff;
+    color: #000000;
+    border: 4px solid #52e51b;
+    padding: 5px 0;
+    border-radius: 25px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.go-btn:active {
+    transform: scale(0.97);
+}
+
+.go-btn:disabled {
+    background-color: white;
+    border-color: #ff3333 !important;
+    color: black !important;
+    opacity: 1 !important;
+    cursor: not-allowed;
+}
+
+/* ✨ ပြင်ဆင်ချက် - ဘယ်ညာ အချိုးကျ ဖြန့်ကျက်ထားသော ဇိမ်ခံ Footer ပုံစံ */
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    padding: 0 10px;
+    width: 100%;
+}
+
+/* ✨ အဝိုင်းခလုတ်များ၏ General Style ရွှေဝါရောင်ဆန်ဆန် Gradient Effects */
+.nav-btn-circle {
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background: #ffffff;
+}
+
+.nav-btn-circle:hover {
+    transform: scale(1.08);
+}
+
+.nav-btn-circle:active {
+    transform: scale(0.95);
+}
+
+.btn-icon-wrap {
+    font-size: 1.6rem;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.btn-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+/* ✨ Prize Button (ဘယ်ဘက်) အဝါရောင်တောက်တောက်ဒီဇိုင်း */
+.prize-btn {
+    background: linear-gradient(135deg, #ffeb3b, #fbc02d);
+    color: #000000;
+    border: 2px solid #fbc02d;
+}
+
+.prize-btn .btn-icon-wrap {
+    color: #d32f2f;
+    /* လက်ဆောင်ဗူးအနီရောင်လေး */
+}
+
+/* ✨ Rank Button (ညာဘက်) စတိုင်လ်ကျကျ အဖြူရောင်ဒီဇိုင်း */
+.rank-btn {
+    background: #ffffff;
+    color: #000000;
+    border: 2px solid #e0e0e0;
+}
+
+.rank-btn .btn-icon-wrap {
+    color: #ffca28;
+    /* ရွှေဖလားရောင် */
+}
+
+.copyright {
+    text-align: center;
+    font-size: 0.65rem;
+    color: #757575;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+@media (max-height: 670px) {
+    .session-title {
+        font-size: 1.2rem;
+        margin: 2px 0;
+    }
+
+    .go-btn {
+        padding: 10px 30px;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+
+    .char-top-input {
+        font-size: 16px;
+    }
+}
+/* Scrollbar ကို ပုံစံမပျက်ဘဲ ဖျောက်ထားနည်း */
+.phone-container::-webkit-scrollbar {
+    display: none;
+}
+.phone-container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}

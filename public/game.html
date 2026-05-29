@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Bingo Host - Control Panel</title>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #eeedeb;
+            color: #1e293b;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Vertical centering layout for the header items */
+        .header-center-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 12px;
+            margin-bottom: -10px;
+        }
+
+        /* Elegant spacing wrapper for the text field */
+        .session-input-wrapper {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Beautiful pill-style input box matching your theme elements */
+        #sessionInput {
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            background: rgba(255, 255, 255, 0.85);
+            width: 120px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #2563eb;
+            outline: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
+        }
+
+        #sessionInput:focus {
+            border-color: #2563eb;
+            background: #ffffff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+
+        .badge {
+            background: #3b82f6;
+            color: white;
+            padding: 8px 22px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
+        }
+
+        .dashboard {
+            background: rgba(255, 255, 255, 0.4);
+            padding: 40px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            text-align: center;
+            width: 450px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        #panel-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .brand-logo {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            max-width: 65px;
+            height: auto;
+            z-index: 20;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 20;
+        }
+
+        #currentNum {
+            font-size: 11rem;
+            font-weight: 800;
+            color: #2563eb;
+            text-shadow: 0 0 20px rgba(37, 99, 235, 0.15);
+            margin: 10px 0;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn {
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .btn-start {
+            background: linear-gradient(to right, #2563eb, #3a7bd5);
+            color: white;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-start:disabled {
+            background: #cbd5e1;
+            color: #64748b;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-music {
+            background: #f1c40f;
+            color: #000;
+            width: 48%;
+        }
+
+        .btn-music.active {
+            background: #d4ac0d;
+        }
+
+        .btn-reset {
+            background: #ef4444;
+            color: white;
+            width: 48%;
+        }
+
+        #timer-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.08);
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        #timer-bar {
+            width: 0%;
+            height: 100%;
+            background: #2563eb;
+            transition: width 1s linear;
+        }
+
+        #winner-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(238, 237, 235, 0.98);
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .trophy {
+            font-size: 150px;
+            margin-bottom: 20px;
+        }
+
+        .create-session-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .session-name-input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            outline: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .session-name-input:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        .btn-create-session {
+            background: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-create-session:hover {
+            background: #059669;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="winner-overlay">
+        <div class="trophy">🏆</div>
+        <div class="congrats-text" style="font-size: 2.5rem; font-weight: bold;">Congratulations <span
+                id="modal-winner-name"></span>!</div>
+        <button class="btn btn-reset" style="width: 200px; margin-top: 30px;" onclick="reset()">Restart Game</button>
+    </div>
+
+    <div class="dashboard">
+        <video autoplay loop muted playsinline id="panel-video">
+            <source src="sakura video.mp4" type="video/mp4">
+        </video>
+
+        <img src="MABA 10th anniversary logo.png" alt="Logo" class="brand-logo">
+
+        <div class="content-wrapper">
+            <div class="header-center-container"></div>
+            <span class="badge">👥 Players: <span id="count">0</span></span>
+            <div class="session-input-wrapper" style="margin-top: 10px;">
+                <input type="text" id="sessionInput" value="1" placeholder="Session Label">
+            </div>
+        </div>
+
+        <div id="currentNum">--</div>
+
+        <div id="timer-bar-container">
+            <div id="timer-bar"></div>
+        </div>
+
+        <div id="timer-text" style="font-size: 0.9rem; color: #1e293b; font-weight: 500;">Waiting to start...</div>
+
+        <div class="create-session-row">
+            <input type="text" id="newSessionName" class="session-name-input" placeholder="Enter session name...">
+            <button class="btn-create-session" onclick="createSession()">Create Session</button>
+        </div>
+
+        <button class="btn btn-start" id="startBtn" onclick="clickStartGame()">START GAME</button>
+
+        <div style="display:flex; justify-content: space-between; margin-top: 20px;">
+            <button class="btn btn-music" id="musicBtn" onclick="toggleMusic()">🎵 Music Off</button>
+            <button class="btn btn-reset" onclick="reset()">Reset</button>
+        </div>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="theme song.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const socket = io("http://localhost:3000");
+
+        const music = document.getElementById("bgMusic");
+        const musicBtn = document.getElementById("musicBtn");
+        const timerBar = document.getElementById("timer-bar");
+        const timerText = document.getElementById("timer-text");
+        const winnerOverlay = document.getElementById("winner-overlay");
+        const startBtn = document.getElementById("startBtn");
+        const currentNumDisplay = document.getElementById('currentNum');
+
+        let drawInterval = null, timeLeft = 10, gameActive = false;
+
+        function toggleMusic() {
+            if (music.paused) {
+                music.play().then(() => { musicBtn.innerText = "🎵 Music On"; musicBtn.classList.add('active'); }).catch(e => { });
+            } else {
+                music.pause(); musicBtn.innerText = "🎵 Music Off"; musicBtn.classList.remove('active');
+            }
+        }
+
+        function createSession() {
+            const sessionName = document.getElementById('newSessionName').value.trim();
+
+            if (!sessionName) {
+                alert("ကျေးဇူးပြု၍ Session နာမည်တစ်ခုခု ရိုက်ထည့်ပေးပါ!");
+                return;
+            }
+
+            // 1. UI ပေါ်တွင် ပြသရန်
+            document.getElementById('sessionInput').value = sessionName;
+
+            // 2. localStorage တွင် သိမ်းထားပါ (Home မှ ဖတ်နိုင်ရန်)
+            localStorage.setItem('sessionName', sessionName);
+
+            // 3. ဆာဗာသို့ ပို့ခြင်း
+            socket.emit("createNewSession", { sessionName: sessionName });
+
+            document.getElementById('newSessionName').value = "";
+            alert(`Session "${sessionName}" ကို ဖန်တီးပြီးပါပြီ။`);
+        }
+
+        function clickStartGame() {
+            if (gameActive) return;
+            // 💡 အပေါ်က သတ်မှတ်လိုက်တဲ့ sessionInput တန်ဖိုးအတိုင်း ဆွဲယူပြီး Game စတင်ပါမယ်
+            const sessionLabelValue = document.getElementById('sessionInput').value;
+            console.log("Sending Session Label:", sessionLabelValue);
+            gameActive = true;
+            startBtn.disabled = true;
+            startBtn.innerText = "GAME IN PROGRESS";
+            if (music.paused) toggleMusic();
+
+            let startCount = 5;
+            currentNumDisplay.style.color = "#ef4444";
+
+            const countdownInterval = setInterval(() => {
+                if (startCount > 0) {
+                    currentNumDisplay.innerText = startCount;
+                    startCount--;
+                } else if (startCount === 0) {
+                    currentNumDisplay.innerText = "Go!";
+                    currentNumDisplay.style.color = "#10b981";
+                    startCount--;
+                } else {
+                    clearInterval(countdownInterval);
+                    socket.emit("startGameLoop", { sessionLabel: sessionLabelValue });
+                    startAutoDraw();
+                }
+            }, 1000);
+        }
+
+        function startAutoDraw() {
+            timeLeft = 10;
+            updateTimerUI();
+            if (drawInterval) clearInterval(drawInterval);
+
+            drawInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+                if (timeLeft <= 0) {
+                    timeLeft = 10;
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            timerBar.style.width = (timeLeft / 10) * 100 + "%";
+            timerText.innerText = `Next number in ${timeLeft}s`;
+        }
+
+        function reset() {
+            socket.emit('resetGame'); // Server ကတစ်ဆင့် Player အားလုံးဆီကို Reset လုပ်ဖို့ Signal ပို့
+
+            // Local data ရှင်းခြင်း
+            localStorage.removeItem('sessionName');
+            localStorage.removeItem('need_stamp');
+            localStorage.removeItem('bingo_session_completed');
+
+            clearInterval(drawInterval);
+            gameActive = false;
+            winnerOverlay.style.display = 'none';
+            currentNumDisplay.innerText = "--";
+            currentNumDisplay.style.color = "#2563eb";
+            timerBar.style.width = "0%";
+            timerText.innerText = "Waiting to start...";
+            startBtn.disabled = false;
+            startBtn.innerText = "START GAME";
+
+            if (!music.paused) toggleMusic();
+            music.currentTime = 0;
+        }
+
+        socket.on('updatePlayerCount', (c) => document.getElementById('count').innerText = c);
+
+        socket.on('gameUpdate', (data) => {
+            if (data && data.currentNumber && data.currentNumber !== "--" && gameActive) {
+                currentNumDisplay.innerText = data.currentNumber;
+                currentNumDisplay.style.color = "#2563eb";
+                timeLeft = 10;
+                updateTimerUI();
+
+                if (!drawInterval) {
+                    startAutoDraw();
+                }
+            }
+        });
+
+        socket.on('announceWinner', (data) => {
+            clearInterval(drawInterval);
+            drawInterval = null;
+            document.getElementById('modal-winner-name').innerText = data.winnerName;
+            winnerOverlay.style.display = 'flex';
+
+            setTimeout(() => {
+                alert(`Host Alert: Player ${data.winnerName} has won!`);
+                socket.emit('resumeGameFromHost');
+                winnerOverlay.style.display = 'none';
+                startAutoDraw();
+            }, 600);
+        });
+    </script>
+</body>
+
+</html>

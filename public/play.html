@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bingo Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f3f4f6;
+            box-sizing: border-box;
+        }
+
+        /* ================= LAYERED RESPONSIVE CONTAINER ================= */
+        .phone-container {
+            width: 100vw;
+            height: 100vh;
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 0px;
+            box-shadow: none;
+            position: relative;
+            overflow: hidden;
+            padding: 16px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @media screen and (min-width: 481px) {
+            .phone-container {
+                width: 85vw;
+                height: 92vh;
+                max-width: 480px;
+                max-height: 860px;
+                border-radius: 30px;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+                padding: 24px;
+            }
+        }
+
+        @media screen and (min-width: 1025px) {
+            .phone-container {
+                width: 410px;
+                height: 840px;
+                max-width: 410px;
+                max-height: 840px;
+                border-radius: 40px;
+                box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        .bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .phone-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .top-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .brand-logo {
+            max-width: 60px;
+            height: auto;
+        }
+
+        .audio-control-btn {
+            background: #e2e8f0;
+            color: #1e293b;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .audio-control-btn.playing {
+            background: #10b981;
+            color: white;
+        }
+
+        .player-counter {
+            background: #2563eb;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 15px;
+        }
+
+        .timer-display {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ef4444;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 4px 12px;
+            border-radius: 12px;
+            margin-top: -15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+
+        .session-title {
+            font-size: 2.2rem;
+            font-weight: 400;
+            color: #000;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .live-number-panel {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 15px 0;
+            text-align: center;
+            font-size: 3rem;
+            font-weight: 800;
+            color: #111827;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            margin-bottom: 25px;
+        }
+
+        .bingo-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            width: 100%;
+            margin-bottom: auto;
+        }
+
+        .bingo-cell {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1f2937;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.04);
+        }
+
+        .bingo-cell.marked {
+            background: #f43f5e;
+            color: #ffffff;
+            transform: scale(0.96);
+        }
+
+        .bingo-cell.disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .bingo-cell.free-space {
+            cursor: default;
+            padding: 5px;
+        }
+
+        .bingo-cell.free-space img {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+        }
+
+        .bottom-navbar {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .home-btn {
+            width: 50px;
+            height: 50px;
+            background: rgba(203, 213, 225, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .footer-credit {
+            font-size: 0.75rem;
+            color: #4b5563;
+            margin-top: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* 🏆 Winner Overlay Setup */
+        #player-victory-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(238, 237, 235, 0.98);
+            z-index: 1000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* 👥 Other Winner Overlay */
+        #other-player-victory-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            z-index: 999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        .other-win-box {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            width: 85%;
+            max-width: 340px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .small-trophy {
+            font-size: 70px;
+            margin-bottom: 10px;
+        }
+
+        .other-win-title {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .other-win-sub {
+            font-size: 0.95rem;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .big-trophy {
+            font-size: 120px;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        .congrats-title {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .congrats-sub {
+            font-size: 1rem;
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        .claim-btn {
+            background: linear-gradient(to right, #e11d48, #be123c);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 85%;
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
+            transition: transform 0.2s;
+        }
+
+        .claim-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 📋 Custom PopUp Overlay Style overrides */
+        .custom-popup-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+
+        .custom-popup-content {
+            background: #ffffff;
+            padding: 30px 20px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .custom-popup-icon {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+        }
+
+        .custom-popup-title {
+            font-size: 1.7rem;
+            color: #1f2937;
+            margin: 0 0 20px 0;
+            font-weight: 700;
+        }
+
+        .custom-details-box {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .custom-detail-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .custom-detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .custom-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .custom-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .custom-popup-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transition: transform 0.1s;
+        }
+
+        .custom-popup-btn:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.85);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @media screen and (max-height: 720px) {
+            .phone-container {
+                padding: 10px;
+            }
+
+            .top-header {
+                margin-bottom: 8px;
+            }
+
+            .player-counter {
+                margin-bottom: 8px;
+                padding: 4px 12px;
+                font-size: 0.85rem;
+            }
+
+            .session-title {
+                font-size: 1.7rem;
+                margin-bottom: 8px;
+            }
+
+            .live-number-panel {
+                font-size: 2.3rem;
+                padding: 8px 0;
+                margin-bottom: 15px;
+            }
+
+            .timer-display {
+                margin-top: -10px;
+                margin-bottom: 12px;
+                font-size: 0.95rem;
+            }
+
+            .bingo-grid {
+                gap: 6px;
+            }
+
+            .bingo-cell {
+                font-size: 1.15rem;
+                border-radius: 8px;
+            }
+
+            .bottom-navbar {
+                padding-top: 8px;
+            }
+
+            .home-btn {
+                width: 42px;
+                height: 42px;
+                font-size: 1.2rem;
+            }
+
+            .footer-credit {
+                margin-top: 6px;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="themeMusic" src="theme song.mp3" loop></audio>
+
+    <div class="phone-container">
+
+        <div id="luckyWinnerPopup" class="custom-popup-overlay">
+            <div class="custom-popup-content">
+                <div class="custom-popup-icon">🏆</div>
+                <h2 class="custom-popup-title">🎉 Congratulations!</h2>
+
+                <div class="custom-details-box">
+                    <div class="custom-detail-item">
+                        <span class="custom-label">Winner Name</span>
+                        <span id="popupWinnerName" class="custom-value">-</span>
+                    </div>
+                    <div class="custom-detail-item">
+                        <span class="custom-label">Your Lucky Number</span>
+                        <span id="popupLuckyTicket" class="custom-value">-</span>
+                    </div>
+                </div>
+
+                <button type="button" class="custom-popup-btn" onclick="closeLuckyPopup()">OK</button>
+            </div>
+        </div>
+
+        <div id="player-victory-overlay">
+            <div class="big-trophy">🏆</div>
+            <div class="congrats-title">Congratulations <span id="player-win-name"></span>!</div>
+            <div class="congrats-sub">သင့်ဆုမဲကို ကံစမ်းရန် အောက်ပါခလုတ်ကို နှိပ်ပါ။</div>
+            <button class="claim-btn" id="goSpinBtn">Go to Spin Wheel</button>
+        </div>
+
+        <div id="other-player-victory-overlay">
+            <div class="other-win-box">
+                <div class="small-trophy">🎉</div>
+                <div class="other-win-title">Session Over!</div>
+                <div class="other-win-sub">
+                    ကစားသမား <b id="other-winner-name" style="color: #2563eb;"></b> မှ Bingo ပေါက်သွားပါသည်။<br><br>
+                    <button class="claim-btn" onclick="goToHome()"
+                        style="width: 100%; padding: 10px; font-size: 0.9rem;">Next Session / Home</button>
+                </div>
+            </div>
+        </div>
+
+        <video class="bg-video" autoplay loop muted playsinline>
+            <source src="sakura video.mp4" type="video/mp4">
+        </video>
+
+        <div class="phone-content">
+            <div class="top-header">
+                <img src="MABA 10th anniversary logo.png" alt="Logo" class="brand-logo">
+                <button class="audio-control-btn" id="musicToggleBtn" onclick="toggleThemeMusic()">🎵 Play
+                    Music</button>
+            </div>
+
+            <div class="player-counter" id="playerCountDisplay">👥 Players: 0</div>
+
+            <div class="session-title"> (<span id="playSessionLabel"></span>)</div>
+            <div class="live-number-panel" id="liveNumDisplay">--</div>
+
+            <div class="timer-display" id="countdownTimer">Next Number: 10s</div>
+
+            <div class="bingo-grid" id="gridContainer"></div>
+
+            <div class="bottom-navbar">
+                <div class="home-btn" onclick="location.reload()">🏠</div>
+            </div>
+            <div class="footer-credit">© Metro IT (Knowledge Key)</div>
+            <div class="session-title" id="sessionTitle"></div>
+        </div>
+    </div>
+
+    <script>
+        function getAccountKey(baseKey) {
+            const storedUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+            const sessionId = storedUser ? (storedUser.userph || storedUser.username) : (localStorage.getItem('session_id') || 'guest');
+            return `${sessionId}_${baseKey}`;
+        }
+
+        if (localStorage.getItem("bingo_session_completed") === "true" && localStorage.getItem("need_stamp") !== "true") {
+            window.location.replace("spin.html");
+        }
+
+        const serverURL = window.location.hostname === "192.168.21.168" ? "http://192.168.21.168:3000" : "http://localhost:3000";
+        const socket = io(serverURL);
+
+        let playerCard = [];
+        let markedCells = Array(25).fill(false);
+        let currentActiveNumber = null;
+        let gameHistory = [];
+        let countdownValue = 10;
+        let countdownInterval = null;
+
+        function toggleThemeMusic() {
+            const audio = document.getElementById('themeMusic');
+            const btn = document.getElementById('musicToggleBtn');
+            if (audio.paused) {
+                audio.play().then(() => {
+                    btn.innerText = "⏸️ Pause Music";
+                    btn.classList.add('playing');
+                }).catch(err => console.log("Audio playback blocked:", err));
+            } else {
+                audio.pause();
+                btn.innerText = "🎵 Play Music";
+                btn.classList.remove('playing');
+            }
+        }
+
+        function startTimerLoop() {
+            clearInterval(countdownInterval);
+            const timerEl = document.getElementById('countdownTimer');
+            countdownValue = 10;
+            timerEl.style.display = 'block';
+            timerEl.innerText = `Next Number: ${countdownValue}s`;
+
+            countdownInterval = setInterval(() => {
+                countdownValue--;
+                if (countdownValue <= 0) {
+                    timerEl.innerText = `Generating...`;
+                    clearInterval(countdownInterval);
+                } else {
+                    timerEl.innerText = `Next Number: ${countdownValue}s`;
+                }
+            }, 1000);
+        }
+
+        function stopTimerLoop() {
+            clearInterval(countdownInterval);
+            document.getElementById('countdownTimer').style.display = 'none';
+        }
+
+        socket.on("connect", () => {
+            console.log("Connected to server as socket ID: " + socket.id);
+            socket.emit("registerAsPlayer");
+        });
+
+        window.addEventListener('load', () => {
+            const savedCard = localStorage.getItem('bingo_player_card');
+            const savedMarks = localStorage.getItem('bingo_player_marks');
+
+            if (savedCard && savedMarks) {
+                playerCard = JSON.parse(savedCard);
+                markedCells = JSON.parse(savedMarks);
+                renderBingoBoard();
+                checkBingoWin();
+            } else {
+                generateNewBingoCard();
+            }
+        });
+
+        function generateNewBingoCard() {
+            let pool = Array.from({ length: 50 }, (_, i) => i + 1);
+            let shuffled = pool.sort(() => 0.5 - Math.random());
+            playerCard = shuffled.slice(0, 24);
+
+            markedCells = Array(25).fill(false);
+            markedCells[12] = true;
+
+            saveCurrentStateToStorage();
+            renderBingoBoard();
+        }
+
+        function saveCurrentStateToStorage() {
+            localStorage.setItem('bingo_player_card', JSON.stringify(playerCard));
+            localStorage.setItem('bingo_player_marks', JSON.stringify(markedCells));
+        }
+
+        document.getElementById("goSpinBtn").addEventListener("click", () => {
+            window.location.href = "winner-login.html";
+        });
+
+        function renderBingoBoard() {
+            const container = document.getElementById('gridContainer');
+            container.innerHTML = '';
+            let cardIndex = 0;
+
+            for (let i = 0; i < 25; i++) {
+                const cell = document.createElement('div');
+
+                if (i === 12) {
+                    cell.className = 'bingo-cell free-space';
+                    cell.innerHTML = `<img src="1.png" alt="Lucky Cat">`;
+                } else {
+                    cell.className = 'bingo-cell';
+                    const num = playerCard[cardIndex];
+                    cell.innerText = num;
+
+                    if (markedCells[i]) {
+                        cell.classList.add('marked');
+                    }
+
+                    const isSelectable = (num === currentActiveNumber);
+
+                    if (isSelectable) {
+                        cell.onclick = () => toggleCellMark(i);
+                        cell.classList.remove('disabled');
+                    } else {
+                        cell.onclick = null;
+                        if (!markedCells[i]) {
+                            cell.style.opacity = "1";
+                        }
+                    }
+                    cardIndex++;
+                }
+                container.appendChild(cell);
+            }
+        }
+
+        function toggleCellMark(index) {
+            markedCells[index] = !markedCells[index];
+            saveCurrentStateToStorage();
+            renderBingoBoard();
+            checkBingoWin();
+        }
+
+        function checkBingoWin() {
+            let winLines = [
+                [0, 1, 2, 3, 4], [5, 6, 7, 8, 9], [10, 11, 12, 13, 14], [15, 16, 17, 18, 19], [20, 21, 22, 23, 24],
+                [0, 5, 10, 15, 20], [1, 6, 11, 16, 21], [2, 7, 12, 17, 22], [3, 8, 13, 18, 23], [4, 9, 14, 19, 24],
+                [0, 6, 12, 18, 24], [4, 8, 12, 16, 20]
+            ];
+
+            for (let line of winLines) {
+                if (line.every(index => markedCells[index] === true)) {
+                    triggerBingoVictory();
+                    break;
+                }
+            }
+        }
+
+        let randomTicket = null;
+        let pName = "Winner Player";
+
+        async function triggerBingoVictory() {
+            if (localStorage.getItem('is_winner_notified')) return;
+            localStorage.setItem('is_winner_notified', 'true');
+
+            const sessionUser = JSON.parse(localStorage.getItem('user')) || {};
+            const pId = sessionUser.userid || sessionUser.id || localStorage.getItem('userid') || null;
+            pName = sessionUser.username || localStorage.getItem('username') || "Winner Player";
+            const currentSession = localStorage.getItem('sessionName') || "Unknown Session";
+
+            randomTicket = Math.floor(100000 + Math.random() * 900000);
+
+            console.log(`Winner Name : ${pName}`);
+            console.log(`Ticket No : ${randomTicket}`);
+            console.log(`userid : ${pId}`);
+            console.log(`sessionid:${currentSession}`);
+
+            // 🌟 Injecting values inside the UI elements of the custom pop-up box
+            document.getElementById('popupWinnerName').innerText = pName;
+            document.getElementById('popupLuckyTicket').innerText = randomTicket;
+
+            // Displays our custom Popup Menu over the page
+            document.getElementById('luckyWinnerPopup').style.display = 'flex';
+
+            localStorage.setItem("bingo_session_completed", "true");
+            document.getElementById('player-win-name').innerText = pName;
+
+            localStorage.setItem(getAccountKey('saved_current_index'), '0');
+            await saveWinnerToRankTable(pId, randomTicket);
+
+            localStorage.setItem(getAccountKey('saved_current_index'), '0');
+            localStorage.setItem('saved_current_index', '0');
+            localStorage.removeItem('bingo_player_card');
+            localStorage.removeItem('bingo_player_marks');
+            localStorage.removeItem('is_winner_notified');
+            localStorage.removeItem('bingo_session_completed');
+
+            socket.emit('playerBingo', { winnerName: pName, userid: pId, randomTicket: randomTicket });
+        }
+
+        // 🌟 New custom control function executing when the overlay menu is submitted
+        function closeLuckyPopup() {
+            document.getElementById('luckyWinnerPopup').style.display = 'none';
+
+            // Save temporary data variables to transition into the winner login view structure smoothly
+            sessionStorage.setItem('winnerName', pName);
+            sessionStorage.setItem('luckyNumber', randomTicket);
+            sessionStorage.setItem('canSpinWheel', 'true');
+
+            // Force dynamic page transition directly into layout configuration target route
+            window.location.replace("rank.html");
+        }
+
+        async function saveWinnerToRankTable(currentUserId) {
+            if (!currentUserId) {
+                console.error("User ID not found. Cannot save rank.");
+                return;
+            }
+
+            const sessionLabelElem = document.getElementById('playSessionLabel');
+            const currentSessionName = sessionLabelElem ? sessionLabelElem.innerText.trim() : "";
+
+            try {
+                const response = await fetch(`${serverURL}/api/save-winner`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        userid: currentUserId,
+                        sessionid: currentSessionName,
+                        randomTicket: randomTicket
+                    })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    console.log("Winner successfully recorded into ranktbl! Rank ID: " + data.rankid);
+                } else {
+                    console.error("Failed to record winner: ", data.message);
+                }
+            } catch (error) {
+                console.error("Network or Server connection error:", error);
+            }
+        }
+
+        socket.on('updatePlayerCount', (count) => {
+            document.getElementById('playerCountDisplay').innerText = `👥 Players: ${count}`;
+        });
+
+        socket.on('gameUpdate', (data) => {
+            if (data.sessionLabel) {
+                const sessionElem = document.getElementById('playSessionLabel');
+                if (sessionElem) {
+                    sessionElem.innerText = data.sessionLabel;
+                }
+            }
+            if (data && data.currentNumber) {
+                currentActiveNumber = data.currentNumber;
+                gameHistory = data.history || [];
+                document.getElementById('liveNumDisplay').innerText = data.currentNumber;
+                renderBingoBoard();
+                if (data.history && data.history.length > 0) {
+                    startTimerLoop();
+                }
+            }
+        });
+
+        socket.on('announceWinner', (data) => {
+            const myUserId = localStorage.getItem('userid') || (JSON.parse(localStorage.getItem('user')) || {}).userid;
+            if (String(myUserId) !== String(data.userid)) {
+                console.log(`📢 Bingo! Player "${data.winnerName}" has won.`);
+                const otherWinElem = document.getElementById('other-winner-name');
+                if (otherWinElem) otherWinElem.innerText = data.winnerName;
+            }
+        });
+
+        function goToHome() {
+            localStorage.setItem('saved_current_index', '0');
+            localStorage.setItem(getAccountKey('saved_current_index'), '0');
+
+            localStorage.removeItem('bingo_player_card');
+            localStorage.removeItem('bingo_player_marks');
+            localStorage.removeItem('is_winner_notified');
+            localStorage.removeItem('bingo_session_completed');
+
+            window.location.href = 'home.html';
+        }
+
+        socket.on('gameResume', () => {
+            const overlayElem = document.getElementById('other-player-victory-overlay');
+            if (overlayElem) overlayElem.style.display = 'none';
+
+            if (currentActiveNumber) {
+                startTimerLoop();
+            }
+        });
+
+        socket.on('gameResetByHost', () => {
+            stopTimerLoop();
+            localStorage.removeItem('bingo_player_card');
+            localStorage.removeItem('bingo_player_marks');
+            localStorage.removeItem('is_winner_notified');
+            localStorage.removeItem('bingo_session_completed');
+            localStorage.setItem('saved_current_index', '0');
+            localStorage.setItem(getAccountKey('saved_current_index'), '0');
+            document.getElementById('player-victory-overlay').style.display = 'none';
+            document.getElementById('other-player-victory-overlay').style.display = 'none';
+            document.getElementById('liveNumDisplay').innerText = "--";
+            currentActiveNumber = null;
+            gameHistory = [];
+            generateNewBingoCard();
+
+            alert("🔄 Game has been reset by the host. A new board has been generated!");
+            window.location.replace("home.html");
+        });
+    </script>
+</body>
+
+</html>

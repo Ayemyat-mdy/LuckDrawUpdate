@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login & Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <video autoplay loop muted playsinline id="video-background">
+        <source src="sakura video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <div class="main-wrapper">
+
+        <div class="form-container" id="loginBox">
+
+            <div class="logo-wrapper">
+                <img src="./MABA 10th anniversary logo.png" alt="MABA Logo" class="app-logo">
+
+            </div>
+
+            <h2>Login</h2>
+
+            <form id="loginForm" onsubmit="return validateLoginForm(event)">
+                <div class="form-group">
+                    <label for="loginPhone">Phone Number</label>
+                    <input type="tel" id="loginPhone" placeholder="09XXXXXXX" maxlength="11" inputmode="numeric"
+                        required>
+                </div>
+                <div class="error-wrapper">
+                    <div class="error-msg" id="loginPhoneError" style="display: none;">Phone must start with 09 followed
+                        by 7 to 9 digits.</div>
+                </div>
+
+                <button type="submit" class="submit-btn">Login</button>
+
+                <div class="switch-form">
+                    Don't have an account? <a href="terms.html">Registration</a>
+                </div>
+            </form>
+
+            <div class="bottom-scenery-wrapper">
+                <img src="./Torii & Firework.png" alt="Torii Scenery" class="bottom-scenery">
+            </div>
+        </div>
+
+        <div class="form-container" id="registerBox" style="display: none;">
+            <div class="logo-wrapper">
+                <img src="./MABA 10th anniversary logo.png" alt="MABA Logo" class="app-logo">
+
+            </div>
+
+            <h2>Register</h2>
+
+            <form id="registrationForm" onsubmit="return validateRegisterForm(event)">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter Username">
+                    <div class="error-msg" id="usernameError" style="display: none;">Letters and spaces only.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="regPhone">Phone Number</label>
+                    <input type="tel" id="regPhone" placeholder="09_________">
+                    <div class="error-msg" id="regPhoneError" style="display: none;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email (Optional)</label>
+                    <input type="email" id="email" placeholder="Enter Email">
+                    <div class="error-msg" id="emailError" style="display: none;">Invalid email format.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" placeholder="Enter Age">
+                    <div class="error-msg" id="ageError" style="display: none;">Age must be between 10 and 80.</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="occupation">Occupation</label>
+                    <select id="occupation" onchange="toggleOccupationFields()">
+                        <option value="other">Free / Other</option>
+                        <option value="work">Work</option>
+                        <option value="study">Study</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="workField" style="display: none;">
+                    <label for="jobTitle">Job Title</label>
+                    <input type="text" id="jobTitle" placeholder="Enter Job Title">
+                </div>
+
+                <div class="form-group" id="studyField" style="display: none;">
+                    <label for="schoolName">School / University Name</label>
+                    <input type="text" id="schoolName" placeholder="Enter School Name">
+                </div>
+
+                <button type="submit" class="submit-btn">Register</button>
+            </form>
+
+            <div class="bottom-scenery-wrapper">
+                <img src="./Torii & Firework.png" alt="Torii Scenery" class="bottom-scenery">
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

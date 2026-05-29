@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandalay-Japan Festival & SME Bazaar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset & Base Elements */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Pyidaungsu', Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px;
+            position: relative;
+            background-color: #0f172a; 
+            overflow-x: hidden;
+        }
+
+        /* Full Screen Background Video Implementation Component */
+        .video-bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            overflow: hidden;
+        }
+
+        .video-bg-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Ambient Protection Layer */
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(254, 219, 237, 0.45) 0%, rgba(30, 27, 75, 0.75) 100%);
+            z-index: -1;
+        }
+
+        /* Fully Responsive Flexible Container */
+        .flyer-container {
+            width: 100%;
+            max-width: 680px; 
+            position: relative;
+            z-index: 1;
+            margin: 0 auto;
+            padding: 15px 0;
+        }
+
+        /* Unified Glassmorphism Panel Card Container */
+        .content-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 32px;
+            padding: 30px 20px 20px 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Header Style Component Inside Panel */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 1.5px dashed rgba(190, 24, 93, 0.2);
+            padding-bottom: 20px;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .main-logo {
+            height: 80px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .association-name {
+            font-size: 13.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #be185d;
+            margin-bottom: 8px;
+        }
+
+        .main-title {
+            font-size: 24px;
+            font-weight: 900;
+            line-height: 1.3;
+            color: #0f172a;
+        }
+
+        /* Content Sections Styling */
+        .content-card h2 {
+            font-size: 19px;
+            font-weight: 800;
+            color: #db2777;
+            margin-bottom: 18px;
+            line-height: 1.4;
+        }
+
+        .description {
+            font-size: 15.5px;
+            line-height: 1.7;
+            color: #1e293b;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        .highlight-box {
+            background-color: #fff1f2;
+            border-left: 4px solid #f43f5e;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #0f172a;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .highlight-box strong {
+            color: #e11d48;
+        }
+
+        .rules-section {
+            background-color: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 14.5px;
+            line-height: 1.6;
+            color: #334155;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .cta-text {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #475569;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        /* Amber/Gold Action Trigger Element Button */
+        .btn-gold-action {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            color: #ffffff;
+            border: none;
+            padding: 16px 24px;
+            font-size: 16.5px;
+            font-weight: 700;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(180, 83, 9, 0.3);
+            transition: all 0.25s ease;
+            text-decoration: none;
+            margin-bottom: 25px;
+        }
+
+        .btn-gold-action:hover {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(180, 83, 9, 0.45);
+        }
+
+    /* Footer Style Component Inside Panel */
+.footer {
+    border-top: 1px solid #e2e8f0;
+    padding: 20px 0; /* အပေါ်အောက် ပိုညီအောင် */
+    margin-top: 20px;
+    text-align: center;
+    color: #64748b;
+    font-size: 0.875rem; /* စာလုံးအရွယ်အစားကို ပိုဖတ်ရလွယ်အောင် */
+    font-weight: 500;
+}
+/* Footer Image ကို ညှိပေးတဲ့အပိုင်း */
+.footer-logo {
+    display: block;
+    margin: 0 auto 10px auto; /* အလယ်ရောက်အောင်နဲ့ စာသားနဲ့ ခွာပေးတာ */
+    max-width: 500px;       /* ဒီနေရာကနေ ပုံအရွယ်အစားကို လိုသလို ချိန်နိုင်ပါတယ် (ဥပမာ- 100px သို့မဟုတ် 150px) */
+    width: 100%;            /* Responsive ဖြစ်စေဖို့ */
+    height: auto;           /* ပုံမပျက်အောင် အချိုးကျ ထိန်းပေးထားတာ */
+}်
+
+/* Footer အတွင်းက စာသားအတွက် */
+.footer p {
+    margin: 0;
+    letter-spacing: 0.025em; /* စာလုံးကြားကွာဟချက် နည်းနည်းပေးခြင်း */
+    opacity: 0.8; /* အရောင်ကို နည်းနည်းညှိုးစေပြီး ပိုသပ်ရပ်စေတယ် */
+}
+
+        .copyright {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* ---------------------------------------------------- */
+        /* Media Queries Context For Tablet and PC Adaptations  */
+        /* ---------------------------------------------------- */
+        @media (min-width: 576px) {
+            body {
+                padding: 25px;
+            }
+            .main-logo {
+                height: 95px;
+            }
+            .association-name {
+                font-size: 14.5px;
+            }
+            .main-title {
+                font-size: 30px;
+            }
+            .content-card {
+                padding: 40px 35px 25px 35px;
+                border-radius: 40px;
+            }
+            .content-card h2 {
+                font-size: 22px;
+            }
+            .description {
+                font-size: 16.5px;
+            }
+            .highlight-box {
+                font-size: 16px;
+            }
+            .rules-section {
+                font-size: 15.5px;
+            }
+            .cta-text {
+                font-size: 15.5px;
+            }
+            .btn-gold-action {
+                font-size: 17.5px;
+                padding: 17px 30px;
+            }
+            .footer {
+            padding: 15px 0;
+            font-size: 0.75rem; /* ဖုန်းမှာဆိုရင် စာလုံးအရွယ်အစား နည်းနည်းလေး ပြန်လျှော့ပေးပါ */
+    }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="video-bg-container">
+        <video autoplay loop muted playsinline style="pointer-events: none;">
+            <source src="sakura video.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+    <div class="video-overlay"></div>
+
+    <div class="flyer-container">
+        
+        <main class="content-card">
+            
+            <header class="header">
+                <div class="logo-container">
+                    <img src="MABA 10th anniversary logo.png" alt="MABA Logo" class="main-logo">
+                </div>
+                <p class="association-name">Myanmar-Japan Alliance Business Association</p>
+                <h1 class="main-title">Mandalay-Japan Festival &<br>SME Bazaar</h1>
+            </header>
+
+            <h2>🎉 MABA Smart Bingo Game မှ ကြိုဆိုပါတယ်! 🎉</h2>
+            
+            <p class="description">
+                ပွဲတော် (၂) ရက်တာ ကာလအတွင်း ဧည့်သည်များအတွက် ဆုမဲပေါင်းများစွာ ပါဝင်သည့် Bingo Game အစီအစဉ်ကို တစ်နေ့လျှင် (၃) ကြိမ်နှုန်းဖြင့် စုစုပေါင်း (၆) ကြိမ် ခွဲခြားကျင်းပသွားမည် ဖြစ်ပါသည်။
+            </p>
+
+            <p class="highlight-box">
+                🔥 <strong>Grand Final သို့ တက်လှမ်းပါ!</strong> နောက်ဆုံးပိတ် Game Session (၆) သည် အဖိုးတန် Grand Prize (ဆုကြီးများ) ချီးမြှင့်မည့် အထူးပွဲစဉ်ဖြစ်ပါသည်။
+            </p>
+
+            <div class="rules-section">
+                <p><strong>စည်းမျဉ်း</strong> - အဆိုပါ Grand Final သို့ ဝင်ရောက်ကစားလိုပါက Session (၁) မှ (၅) အနက် တစ်ခုခုတွင် အနည်းဆုံး (၁) ကြိမ် ဝင်ရောက်ကစားဖူးသူ ဖြစ်ရပါမည်။</p>
+            </div>
+
+            <p class="cta-text">
+                ဆုကြီးများကို ရယူရန် ပွဲအစကတည်းက လက်မနှေးဖို့တော့ လိုမယ်နော်။ ဂိမ်းကစားရန် နေရာအကန့်အသတ်ရှိသဖြင့် အောက်ပါလင့်ခ်တွင် အမြန်ဆုံး ကြိုတင်စာရင်းသွင်း (Register) ထားရန် ဖိတ်ခေါ်အပ်ပါသည်။
+            </p>
+
+            <a href="prizedisplay.html" id="viewPrizesBtn" class="btn-gold-action">
+                <i class="fa-solid fa-gift"></i> View Session Prizes & Sponsors
+            </a>
+
+            <footer class="footer">
+                <img src="Torii & Firework.png" alt="Metro IT Logo" class="footer-logo">
+                 <p class="copyright">&copy; Metro IT (Knowledge Key)</p>
+            </footer>
+            
+        </main>
+
+    </div>
+
+    <script src="index-script.js"></script>
+</body>
+</html>

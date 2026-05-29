@@ -1,0 +1,294 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winner Login Screen</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body{
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        
+        }
+
+        /* 🌸 အောက်ခံ Sakura Background Video */
+        .body-bg-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -2;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+
+        /* 📱 Mobile UI Phone Container */
+        .phone-container {
+               width: 390px;
+    max-height: 844px;
+    border-radius: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            position: relative;
+        }
+
+        /* 🌟 Header & Logo အပိုင်း */
+        .header {
+            width: 100%;
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 25px;
+        }
+
+        .main-logo {
+            width: 120px;
+            height: auto;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .screen-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #ffffff;
+            margin-top: 20px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        /* 🌟 [ပြင်ဆင်ချက်] အမည်းရောင်အစား Sakura ဗီဒီယိုကို ဖောက်ထွင်းမြင်ရမည့် Glassmorphism Panel */
+     
+
+        .input-group {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-label {
+            display: block;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding-left: 5px;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 📝 [ပြင်ဆင်ချက်] ပုံပါအတိုင်း မီးခိုးနုရောင် အနားသတ်ဝိုင်းသော Input Fields */
+        .input-field {
+            width: 100%;
+            padding: 15px 15px 15px 50px;
+            font-size: 15px;
+            background: rgba(235, 235, 235, 0.9);
+            /* ပုံထဲကအတိုင်း မီးခိုးနုရောင်အောက်ခံ */
+            border: none;
+            border-radius: 20px;
+            /* Round Corners စတိုင်လ် */
+            color: #2c3e50;
+            font-weight: 500;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            background: #ffffff;
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.6);
+        }
+
+        /* Dropdown custom Arrow */
+        select.input-field {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        /* 🎨 [ပြင်ဆင်ချက်] ပုံထဲကအတိုင်း ဝါရွှေရောင် Icon များ */
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            bottom: 15px;
+            color: #d4af37;
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        /* Dropdown ညာဘက်မြှားပုံစံ */
+        .dropdown-wrapper {
+            position: relative;
+        }
+
+        .dropdown-wrapper::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 20px;
+            bottom: 15px;
+            color: #7f8c8d;
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        /* 🏆 MABA Gold Confirm Button */
+        .submit-btn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #4a3700;
+            background: linear-gradient(135deg, #ffe066 0%, #d4af37 40%, #b38f1b 70%, #f3e5ab 100%);
+            border: 1.5px solid #fff3ad;
+            border-radius: 20px;
+            /* ခလုတ်ကိုပါ အနားသတ်ဝိုင်းပေးထားပါတယ် */
+            cursor: pointer;
+            box-shadow: 0 6px 18px rgba(212, 175, 55, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(212, 175, 55, 0.5);
+        }
+
+        .submit-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Footer Text */
+        .footer-text {
+         text-align: center;
+    font-size: 0.65rem;
+    color: #757575;
+    margin-top: 10px;
+    margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <video autoplay loop muted playsinline class="body-bg-video">
+        <source src="sakura video.mp4" type="video/mp4">
+    </video>
+
+    <div class="phone-container">
+
+      
+        <form class="login-panel" id="winnerLoginForm" onsubmit="handleWinnerLogin(event)">
+
+     <header class="header">
+            <img src="MABA 10th anniversary logo.png" alt="MABA Logo" class="main-logo">
+            <h1 class="screen-title">Winner Login</h1>
+        </header>
+
+
+            <div class="input-group">
+                <label class="input-label">Phone Number</label>
+                <i class="fa-solid fa-phone input-icon"></i>
+                <input type="tel" class="input-field" placeholder="Enter phone number" required autocomplete="off"
+                    id="phoneInput">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Winner Lucky Ticket</label>
+                <i class="fa-solid fa-ticket input-icon"></i>
+                <input type="text" class="input-field" placeholder="Enter lucky ticket number" required
+                    autocomplete="off" id="ticketInput">
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">Session Name</label>
+                <div class="dropdown-wrapper">
+                    <i class="fa-solid fa-layer-group input-icon"></i>
+                    <select class="input-field" id="sessionDropdown" required>
+                        <option value="" disabled selected>Choose your section</option>
+                        <option value="Session 1">Session 1</option>
+                        <option value="Session 2">Session 2</option>
+                        <option value="Session 3">Session 3</option>
+                        <option value="Session 4">Session 4</option>
+                        <option value="Session 5">Session 5</option>
+                        <option value="Session 6">Session 6</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                Confirm & Proceed
+            </button>
+        </form>
+
+        <div class="footer-text">
+            © Metro IT (Knowledge Key)
+        </div>
+    </div>
+
+    <script>
+        async function handleWinnerLogin(event) {
+            event.preventDefault(); // Form မူလအလုပ်လုပ်ပုံကို ခေတ္တရပ်တန့်ခြင်း
+
+            const phone = document.getElementById('phoneInput').value;
+            const ticket = document.getElementById('ticketInput').value;
+            const selectedSession = document.getElementById('sessionDropdown').value;
+
+            try {
+                // Node.js API သို့ Data လှမ်းပို့ခြင်း
+                const response = await fetch('/api/check-winner', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userph: phone,
+                        randomTicket: ticket,
+                        session_name: selectedSession
+                    })
+                });
+
+                const data = await response.json();
+
+                // Node.js ဘက်က 'exists: true' ဟု ပြန်ပေးမှသာ လွှတ်ပေးမည်
+                if (data.success && data.exists) {
+                    // လိုအပ်ပါက LocalStorage တွင် သိမ်းဆည်းထားနိုင်သည်
+                    localStorage.setItem('winner_phone', phone);
+                    localStorage.setItem('winner_ticket', ticket);
+                    localStorage.setItem('sessionName', selectedSession);
+                    localStorage.setItem('winner_userid', data.userid);
+
+                    // ကံစမ်းမဲလှည့်သည့် စာမျက်နှာသို့ သွားခွင့်ပြုခြင်း
+                    window.location.href = "spin.html";
+                } else {
+                    // မှားယွင်းပါက Error Message အသိပေးခြင်း
+                    alert("ရိုက်ထည့်ထားသော ဖုန်းနံပါတ်၊ လက်မှတ် သို့မဟုတ် Session မမှန်ကန်ပါ။ ပြန်လည်စစ်ဆေးပေးပါ။");
+                }
+            } catch (error) {
+                console.error("Error during authentication:", error);
+                alert("ဆာဗာနှင့် ချိတ်ဆက်မှု အဆင်မပြေပါ။ ခေတ္တစောင့်ပြီး ပြန်ကြိုးစားပါ။");
+            }
+        }
+    </script>
+</body>
+
+</html>

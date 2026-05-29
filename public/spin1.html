@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucky Spin - Real World</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* 📱 မူရင်းပုံအတိုင်း ဖုန်း Layout Container နှင့် နောက်ခံရောင် */
+        .phone-container {
+            width: 100%;
+            max-width: 420px;
+            background: #FFE4E1;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .top-logo {
+            height: 45px;
+            object-fit: contain;
+        }
+
+        .profile-icon {
+            background: white;
+            padding: 10px;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: #1a1a1a;
+            margin: 10px 0;
+            letter-spacing: 1px;
+        }
+
+        /* 🎯 ဆုမဲဘီး Wrapper */
+        .wheel-wrapper {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 0 auto;
+        }
+
+        /* 📍 အပေါ်က မဲညွှန်ပြသည့် မူရင်းရွှေဝါရောင် တြိဂံမျှားခေါင်း */
+        .wheel-pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-top: 28px solid #ca9f1b;
+            z-index: 20;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        /* 🏆 အပြင်ဘက် ရွှေရောင်အဝိုင်းနှင့် မီးသီးလိုင်း */
+        .outer-gold-ring {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #f39c12 60%, #d35400 100%);
+            border-radius: 50%;
+            padding: 10px;
+            box-sizing: border-box;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        /* 💡 ဘေးပတ်လည်က မီးသီးလေးများ */
+        .dot {
+            position: absolute;
+            width: 7px;
+            height: 7px;
+            background-color: #fff;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0 0;
+            transform: translate(-50%, -50%) rotate(calc(18deg * var(--i))) translateY(-144px);
+            box-shadow: 0 0 4px #fff;
+        }
+
+        /* 🎯 ဆုမဲဘီး အဝိုင်းကြီး - မူရင်းပုံစံအတိုင်း အဓိကအရောင် (၅) ရောင်နောက်ခံ */
+        .spin-wheel {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
+            transition: transform 5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            /* 🎨 အပြာ၊ အဝါ၊ အဖြူ၊ ညို၊ နီ အရောင် (၅) ရောင် နောက်ခံ ပုံသေဒီဇိုင်း */
+            background: conic-gradient(#00d2ff 0deg 72deg,
+                    /* 💎 Diamond / အပြာ */
+                    #ffdb4d 72deg 144deg,
+                    /* 🥇 Gold 1 / အဝါ */
+                    #ffffff 144deg 216deg,
+                    /* 🥈 Silver 2 / အဖြူ */
+                    #e67e22 216deg 288deg,
+                    /* 🥉 Bronze 3 / ညို */
+                    #ff4d4d 288deg 360deg
+                    /* 🎁 Gift / နီ */
+                );
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 🎯 အကွက် ၂၀ အတွက် စာသားနှင့် အိုင်ကွန်များကို စုစည်းနေရာချခြင်း */
+        .number-tag {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: bottom right;
+            /* တစ်ကွက်ကို ၁၈ ဒီဂရီစီ (360 / 20) တိတိ ခွဲဖြန့်ပေးထားပါတယ် */
+            transform: rotate(calc(18deg * var(--i)));
+            box-sizing: border-box;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding-left: 25px;
+            /* အလယ်ဗဟိုနဲ့ မကပ်အောင် အပြင်ထုတ်ထားသည် */
+        }
+
+        /* 🎯 အတွင်းက အိုင်ကွန်နှင့် စာသားပုံစံ */
+        .number-tag .item-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* ပုံထဲကလို မျှားခေါင်းဆီသို့ စာသားတွေ ထောင်မတ်ကြည့်ကောင်းနေစေရန် */
+            transform: rotate(81deg);
+            white-space: nowrap;
+        }
+
+        /* အိုင်ကွန်အရွယ်အစား */
+        .number-tag .icon {
+            font-size: 16px;
+            margin-bottom: 2px;
+            filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.2));
+        }
+
+        /* ဆုမဲနံပါတ် / နာမည်တို */
+        .number-tag .label {
+            font-size: 11px;
+            font-weight: 800;
+            color: #000000;
+            /* ပုံထဲကအတိုင်း စာသားအမည်းရောင် တောက်တောက် */
+            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+        }
+
+        /* 📍 အလယ်ဗဟိုက မူရင်းရွှေဝါရောင် ပင်တံဝိုင်း */
+        .inner-center-pin {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 42px;
+            height: 42px;
+            background: radial-gradient(circle, #fff 0%, #f1c40f 60%, #d4ac0d 100%);
+            border-radius: 50%;
+            z-index: 10;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+            border: 3px solid #fff;
+        }
+
+        /* 🔘 SPIN Button စတိုင် */
+        .spin-btn {
+            width: 90%;
+            margin: 20px auto;
+            padding: 14px;
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(to bottom, #ca9f1b, #947510);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.18);
+            transition: 0.2s;
+        }
+
+        .spin-btn:active {
+            transform: scale(0.98);
+        }
+
+        .spin-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* Footer */
+        .footer {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .bottom-btn {
+            background: #cbd5e1;
+            padding: 12px;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #475569;
+        }
+
+        .nav-btn-circle {
+            background: white;
+            border: none;
+            padding: 12px;
+            border-radius: 50%;
+            width: 46px;
+            height: 46px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            cursor: pointer;
+        }
+
+        .footer-text {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 10px;
+        }
+
+        /* 🔔 Popup Modal စတိုင် */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .popup-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .popup-content {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 320px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .popup-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .prize-badge {
+            background: #fff3cd;
+            color: #856404;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin: 15px 0;
+            font-size: 18px;
+            border: 1px dashed #ffeeba;
+        }
+
+        .popup-close-btn {
+            background: #d4ac0d;
+            border: none;
+            padding: 10px 35px;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="phone-container">
+        <div class="header-nav">
+            <img src="./MABA 10th anniversary logo.png" alt="MABA Logo" class="top-logo">
+            <a href="./profile.html" style="color: inherit;">
+                <div class="profile-icon">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+            </a>
+        </div>
+
+        <h1 class="main-title">LUCKY SPIN</h1>
+
+        <div class="wheel-wrapper">
+            <div class="wheel-pointer"></div>
+
+            <div class="outer-gold-ring">
+                <div class="dot" style="--i:1;"></div>
+                <div class="dot" style="--i:2;"></div>
+                <div class="dot" style="--i:3;"></div>
+                <div class="dot" style="--i:4;"></div>
+                <div class="dot" style="--i:5;"></div>
+                <div class="dot" style="--i:6;"></div>
+                <div class="dot" style="--i:7;"></div>
+                <div class="dot" style="--i:8;"></div>
+                <div class="dot" style="--i:9;"></div>
+                <div class="dot" style="--i:10;"></div>
+                <div class="dot" style="--i:11;"></div>
+                <div class="dot" style="--i:12;"></div>
+                <div class="dot" style="--i:13;"></div>
+                <div class="dot" style="--i:14;"></div>
+                <div class="dot" style="--i:15;"></div>
+                <div class="dot" style="--i:16;"></div>
+                <div class="dot" style="--i:17;"></div>
+                <div class="dot" style="--i:18;"></div>
+                <div class="dot" style="--i:19;"></div>
+                <div class="dot" style="--i:20;"></div>
+
+                <div class="spin-wheel" id="wheel">
+                    <div class="inner-center-pin"></div>
+                </div>
+            </div>
+        </div>
+
+        <button class="spin-btn" id="spinBtn" onclick="startSpin()">SPIN</button>
+
+        <footer class="footer">
+            <a href="./reg.html">
+                <div class="bottom-btn home-btn">
+                    <i class="fa-solid fa-house"></i>
+                </div>
+            </a>
+
+            <button class="nav-btn-circle rank-btn" onclick="window.location.href='rank.html'">
+                <div class="btn-icon-wrap"><i class="fa-solid fa-trophy"></i></div>
+            </button>
+        </footer>
+
+        <div id="prizePopup" class="popup-overlay">
+            <div class="popup-content">
+                <div class="popup-icon">🎉</div>
+                <h2>ကံထူးမှုအောင်မြင်ပါသည်</h2>
+                <p>သင်ရရှိသော ကံထူးဆုမှာ</p>
+                <div id="popupPrizeName" class="prize-badge">--</div>
+                <button class="popup-close-btn" onclick="closePopup()">OK</button>
+            </div>
+        </div>
+
+        <div class="footer-text">
+            © Metro IT (Knowledge Key)
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.7.5/dist/socket.io.min.js"></script>
+    <script src="spin-script1.js"></script>
+</body>
+
+</html>

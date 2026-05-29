@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="my">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Session Prizes & Sponsors</title>
+    <link rel="stylesheet" href="prizedisplay.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="video-bg-container">
+        <video autoplay loop muted playsinline>
+            <source src="sakura video.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div class="video-overlay"></div>
+
+    <div class="flyer-container">
+
+        <header class="header">
+        </header>
+
+        <main class="content-card">
+
+            <div class="panel-logo-wrapper">
+                <img src="MABA 10th anniversary logo.png" alt="MABA Logo" class="main-logo-big">
+            </div>
+
+<p class="association-name" style="font-weight: 700;">
+                <span style="color: #0000cc;">Myanmar</span>-<span style="color: #cc0000;">Japan</span> <span style="color: #000000;">Alliance Business Association</span>
+            </p>
+            
+            <h1 class="main-title">Mandalay-Japan Festival &<br>SME Bazaar</h1>
+
+            <div class="session-panel">
+                <label class="session-label" for="sessionSelect">
+                    <i class="fa-solid fa-gift"></i> ဘယ် Session အတွက်လဲ ရွေးချယ်ပါ
+                </label>
+                <div class="custom-select-box">
+                    <select id="sessionSelect" class="session-select-input" onchange="handleSessionChange()">
+                        <option value="1">Session 1</option>
+                        <option value="2">Session 2</option>
+                        <option value="3">Session 3</option>
+                        <option value="4">Session 4</option>
+                        <option value="5">Session 5</option>
+                        <option value="6" selected>Session 6</option>
+                    </select>
+                </div>
+            </div>
+
+            <h2 class="prize-heading">Game Session အလိုက် ဆုကြီးများနှင့်<br>ဆုပေးအပ်မည့် Sponsor Company များ</h2>
+
+            <div class="table-container">
+                <table class="prizes-table">
+                    <thead>
+                        <tr>
+                            <th id="sessionHeaderTitle">Session (6)</th>
+                            <th>ဆုအရေအတွက်</th>
+                            <th>Sponsor Company များ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prizeTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <button type="button" class="btn-back" onclick="navigateToSchedule()">
+                Game Schedule and Game Session
+            </button>
+
+            <footer class="card-footer">
+            <div class="footer-image-container">
+                <img src="Torii & Firework.png" alt="Footer Illustration" class="footer-img">
+            </div>
+                <p class="copyright">&copy; Metro IT (Knowledge Key)</p>
+            </footer>
+
+        </main>
+    </div>
+
+    <script>
+        const sessionDataMatrix = {
+            "1": {
+                diamondSponsor: "Kiyo-Myanmar Pann Laung Eco Lodge",
+                goldSponsor: "Ocean Center", goldQty: "၂ ဆု",
+                silverSponsor: "Pizza Hub", silverQty: "၃ ဆု",
+                bronzeSponsor: "KFC", bronzeQty: "၄ ဆု",
+                consolationSponsor: "MABA Association", consolationQty: "၉ ဆု",
+                totalQty: "၁၉ ဆု"
+            },
+            "2": {
+                diamondSponsor: "Kiyo-Myanmar Pann Laung Eco Lodge",
+                goldSponsor: "Ocean Center", goldQty: "၂ ဆု",
+                silverSponsor: "Pizza Hub", silverQty: "၃ ဆု",
+                bronzeSponsor: "KFC", bronzeQty: "၄ ဆု",
+                consolationSponsor: "MABA Association", consolationQty: "၉ ဆု",
+                totalQty: "၁၉ ဆု"
+            },
+            "3": {
+                diamondSponsor: "Kiyo-Myanmar Pann Laung Eco Lodge",
+                goldSponsor: "Ocean Center", goldQty: "၂ ဆု",
+                silverSponsor: "Pizza Hub", silverQty: "၃ ဆု",
+                bronzeSponsor: "KFC", bronzeQty: "၄ ဆု",
+                consolationSponsor: "MABA Association", consolationQty: "၉ ဆု",
+                totalQty: "၁၉ ဆု"
+            },
+            "4": {
+                diamondSponsor: "Kiyo-Myanmar Pann Laung Eco Lodge",
+                goldSponsor: "Ocean Center", goldQty: "၂ ဆု",
+                silverSponsor: "Pizza Hub", silverQty: "၃ ဆု",
+                bronzeSponsor: "KFC", bronzeQty: "၄ ဆု",
+                consolationSponsor: "MABA Association", consolationQty: "၉ ဆု",
+                totalQty: "၁၉ ဆု"
+            },
+            "5": {
+                diamondSponsor: "Kiyo-Myanmar Pann Laung Eco Lodge",
+                goldSponsor: "Ocean Center", goldQty: "၂ ဆု",
+                silverSponsor: "Pizza Hub", silverQty: "၃ ဆု",
+                bronzeSponsor: "KFC", bronzeQty: "၄ ဆု",
+                consolationSponsor: "MABA Association", consolationQty: "၉ ဆု",
+                totalQty: "၁၉ ဆု"
+            },
+            "6": {
+                grandSponsor: "Fortune Commercial City Mandalay (FCC)",
+                diamondSponsor: "Kiyo-Myanmar Pann Laung Eco Lodge",
+                goldSponsor: "Ocean Center", goldQty: "၂ ဆု",
+                silverSponsor: "Pizza Hub", silverQty: "၃ ဆု",
+                bronzeSponsor: "KFC", bronzeQty: "၄ ဆု",
+                consolationSponsor: "MABA Association", consolationQty: "၉ ဆု",
+                totalQty: "၂၀ ဆု"
+            }
+        };
+
+        function handleSessionChange() {
+            const currentSelection = document.getElementById("sessionSelect").value;
+            document.getElementById("sessionHeaderTitle").innerText = `Session (${currentSelection})`;
+
+            const data = sessionDataMatrix[currentSelection];
+            if (!data) return;
+
+            const tableBody = document.getElementById("prizeTableBody");
+            let tableHTML = "";
+
+            if (currentSelection === "6") {
+                tableHTML += `
+                    <tr>
+                        <td>
+                            <div class="prize-item">
+                                <strong class="prize-title">🏆 Grand Prize</strong>
+                                <span class="prize-value">(၁၀ သိန်းတန်)</span>
+                            </div>
+                        </td>
+                        <td>၁ ဆု<br><span class="sub-text">(ကန့်သတ်ဆုကြီး)</span></td>
+                        <td>${data.grandSponsor}</td>
+                    </tr>
+                `;
+            }
+
+            tableHTML += `
+                <tr>
+                    <td>
+                        <div class="prize-item">
+                            <strong class="prize-title">💎 Diamond Prize</strong>
+                            <span class="prize-value">(၅ သိန်းတန်)</span>
+                        </div>
+                    </td>
+                    <td>၁ ဆု</td>
+                    <td>${data.diamondSponsor}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="prize-item">
+                            <strong class="prize-title">🥇 Gold Prize</strong>
+                            <span class="prize-value">(၃ သိန်းတန်)</span>
+                        </div>
+                    </td>
+                    <td>${data.goldQty}</td>
+                    <td>${data.goldSponsor}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="prize-item">
+                            <strong class="prize-title">🥈 Silver Prize</strong>
+                            <span class="prize-value">(၂ သိန်းတန်)</span>
+                        </div>
+                    </td>
+                    <td>${data.silverQty}</td>
+                    <td>${data.silverSponsor}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="prize-item">
+                            <strong class="prize-title">🥉 Bronze Prize</strong>
+                            <span class="prize-value">(၁ သိန်းတန် Coupon)</span>
+                        </div>
+                    </td>
+                    <td>${data.bronzeQty}</td>
+                    <td>${data.bronzeSponsor}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="prize-item">
+                            <strong class="prize-title">🎁 နှစ်သိမ့်ဆု (Consolation)</strong>
+                        </div>
+                    </td>
+                    <td>${data.consolationQty}</td>
+                    <td>${data.consolationSponsor}</td>
+                </tr>
+                <tr class="total-row">
+                    <td><strong>စုစုပေါင်း</strong></td>
+                    <td><strong>${data.totalQty}</strong></td>
+                    <td></td>
+                </tr>
+            `;
+
+            tableBody.innerHTML = tableHTML;
+        }
+
+        function navigateToSchedule() {
+            window.location.href = "schedule.html";
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            handleSessionChange();
+        });
+    </script>
+</body>
+
+</html>

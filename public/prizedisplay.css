@@ -1,0 +1,337 @@
+/* 🎨 Reset & Core Engine Adjustments */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', 'Pyidaungsu', Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    position: relative;
+    background-color: #0f172a;
+    overflow-x: hidden;
+}
+
+/* 🎥 Background Video Framework */
+.video-bg-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    overflow: hidden;
+}
+
+.video-bg-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Dynamic Ambient Protection Mask */
+.video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(252, 231, 243, 0.45) 0%, rgba(15, 23, 42, 0.8) 100%);
+    z-index: -1;
+}
+
+/* 📱 Flexible Mockup Wrapper Frame */
+.flyer-container {
+    width: 100%;
+    max-width: 430px;
+    /* Standard phone width specs */
+    min-height: 844px;
+    height: 95vh;
+    /* Prevents overflow clipping on small interfaces */
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 1;
+}
+
+/* 🔝 Header Layer Specifications (အခု ဆိုဒ်သေးသွားပါသည်) */
+.header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0px;
+    /* Space ဖြုတ်ထားသည် */
+    margin-bottom: 5px;
+    /* content panel နဲ့ ကပ်စေရန် */
+    flex-shrink: 0;
+}
+
+/* 🔮 Glassmorphism Content Display Interface Card */
+.content-card {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 32px;
+    padding: 24px 16px;
+    /* ✨ padding ညှိထားသည် */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+    text-align: left;
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    /* internal scrolling framework for data entries */
+}
+
+/* Hide internal scrollbars seamlessly */
+.content-card::-webkit-scrollbar {
+    width: 0px;
+}
+
+/* ✨ Panel ထဲရောက်သွားသော Logo အား ကြီးကြီးလန်းလန်းဖြစ်အောင် ညှိထားချက် */
+.panel-logo-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    /* အလယ်ကွက်တိဖြစ်စေရန် */
+    align-items: center;
+    margin-bottom: 20px;
+    /* အောက်က စာသားနဲ့ ခွာရန် */
+}
+
+.main-logo-big {
+    max-height: 85px;
+    /* ဆိုဒ်ကို ကြီးကြီးလေးနဲ့ ပုံမပျက်အောင် ထိန်းပေးထားတယ် */
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1));
+    /* အရိပ်လေး ထည့်ပေးထားလို့ ကြည့်ကောင်းတယ် */
+}
+
+/* Typography Specifications */
+.association-name {
+    font-size: 0.72rem;
+    color: #b91c64;
+    /* Vibrant rose/pink highlight anchor */
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.main-title {
+    font-size: 1.45rem;
+    color: #1e293b;
+    /* Premium slate typography */
+    line-height: 1.25;
+    font-weight: 800;
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+/* 🎁 Selector Panel Configurations */
+.session-panel {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1.5px solid #fbcfe8;
+    border-radius: 20px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(244, 114, 182, 0.04);
+}
+
+.session-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #be185d;
+    margin-bottom: 8px;
+}
+
+.custom-select-box {
+    position: relative;
+    width: 100%;
+}
+
+.session-select-input {
+    width: 100%;
+    background-color: #fff1f2;
+    border: 1px solid #fecdd3;
+    color: #0f172a;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 12px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: all 0.2s ease;
+}
+
+.session-select-input:hover {
+    background-color: #ffe4e6;
+}
+
+.custom-select-box::after {
+    content: '\f078';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #be185d;
+    pointer-events: none;
+    font-size: 12px;
+}
+
+.prize-heading {
+    color: #111111;
+    font-size: 14.5px;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+/* 📊 Responsive Presentation Matrix Table Layout */
+.table-container {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.prizes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    background-color: #ffffff;
+}
+
+.prizes-table th,
+.prizes-table td {
+    border: 1px solid #fbcfe8;
+    padding: 10px 8px;
+    vertical-align: middle;
+    color: #111111;
+    line-height: 1.4;
+}
+
+.prizes-table th {
+    background-color: #fbcfe8;
+    color: #000000;
+    font-weight: 700;
+    text-align: left;
+}
+
+.prizes-table th:nth-child(2),
+.prizes-table td:nth-child(2) {
+    text-align: center;
+}
+
+.prize-item {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.prize-title {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.prize-value {
+    color: #db2777;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.sub-text {
+    font-size: 10px;
+    color: #6b7280;
+}
+
+/* Highlight Summary Rows */
+.total-row {
+    background-color: #fff1f2;
+}
+
+.total-row td {
+    border-top: 1.5px solid #f472b6;
+    font-weight: 700;
+    color: #be185d;
+}
+
+/* 🔙 Navigation Element Components */
+.btn-back {
+    width: 100%;
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+    color: #ffffff;
+    border: 1px solid #d1d5db;
+    padding: 14px;
+    font-size: 13.5px;
+    font-weight: 700;
+    border-radius: 14px;
+    cursor: pointer;
+    margin-top: auto;
+    /* Always positions elegantly above footer layers */
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.btn-back:hover {
+    background-color: rgba(255, 255, 255, 0.6);
+    color: #374151;
+    border-color: #9ca3af;
+}
+
+.btn-back:active {
+    transform: scale(0.99);
+}
+
+/* 🏁 Branding Signature Footer Graphics */
+.card-footer {
+    width: 100%;
+    padding-top: 16px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.footer-graphic {
+    font-size: 14px;
+    margin-bottom: 6px;
+    letter-spacing: 4px;
+}
+
+
+/* Footer Image Container */
+.footer-image-container {
+    width: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-img {
+    width: 100%;          /* Panel အကျယ်အတိုင်း ပုံကို ဆန့်ပေးမယ် */
+    max-width: 400px;     /* အရမ်းမကြီးအောင် ကန့်သတ်ထားတယ် */
+    height: auto;         /* ပုံအချိုးအစား မပျက်အောင် */
+    object-fit: contain;  /* ပုံအစုံပေါ်အောင် ထိန်းထားတယ် */
+}
+
+/* စာသားအတွက် အနည်းငယ် ချိန်ညှိမှု */
+.copyright {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+    margin-top: 5px;
+}
