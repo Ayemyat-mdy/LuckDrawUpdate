@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+    <!-- Background Video -->
+    <video autoplay loop muted playsinline id="video-background">
+        <source src="sakura video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <!-- Login Container -->
+    <div class="form-container">
+        <h2>Login</h2>
+        <form id="loginForm" onsubmit="return validateLoginForm(event)">
+
+            <div class="form-group">
+                <label for="loginPhone">Phone Number</label>
+                <input type="tel" id="loginPhone" placeholder="" maxlength="12" inputmode="numeric" required>
+            </div>
+            <div class="error-wrapper">
+                <div class="error-msg" id="loginPhoneError">Phone must start with 09- followed by 7 to 9 digits.</div>
+            </div>
+
+            <button type="submit" class="submit-btn">Login</button>
+
+            <!-- Link to Register Page -->
+            <div class="switch-form">
+                Don't have an account? <a href="reg.html">Register here</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
