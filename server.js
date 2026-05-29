@@ -1,32 +1,12 @@
-// 1. Supabase Client SDK ကို ခေါ်ယူပါ (npm install @supabase/supabase-js လုပ်ထားရပါမည်)
-const { createClient } = require('@supabase/supabase-js');
-
-// 2. Render Environment Variables များမှတစ်ဆင့် လှမ်းဖတ်ခြင်း
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_ANON_KEY;
-
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-// 3. ဥပမာ - 'usertbl' ထဲက User အားလုံးကို ဆွဲထုတ်မည့် Function
-async function getUsers() {
-  const { data, error } = await supabase
-    .from('usertbl') // သင့်ပုံထဲက Table နာမည်အတိုင်း အတိအကျရေးရန်
-    .select('*');
-
-  if (error) {
-    console.error('Error fetching users:', error);
-    return;
-  }
-  console.log('Users Data:', data);
-  return data;
-}
-
 const express = require("express");
-const mysql = require("mysql2");
 const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
 const console = require("console");
+const path = require("path");
+
+// 🎯 ၁။ Supabase SDK ကို ခေါ်ယူခြင်း
+const { createClient } = require("@supabase/supabase-js");
 
 const app = express();
 const server = http.createServer(app);
@@ -42,6 +22,23 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
+// 🎯 ၂။ Supabase Connection Setup (Environment Variables စနစ်သို့ ပြောင်းလဲခြင်း)
+// Render Settings ထဲတွင် ဤ Key များကို သွားရောက်ထည့်သွင်းပေးရပါမည်။
+const SUPABASE_URL = process.env.SUPABASE_URL || "https://pjymrirpsrgunvvymlfk.supabase.co";
+const SUPABASE_KEY = process.env.SUPABASE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqeW1yaXJwc3JndW52dnltbGZrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTUxNTUyNCwiZXhwIjoyMDk1MDkxNTI0fQ.PdiUJJXqafeach4oi_eH94ExO3qnExBkdW5jr-EGtxU"; // သင့် Secret Key အပြည့်အစုံကို ဤနေရာတွင် (သို့) Environment variable တွင် ထည့်ပါ
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Supabase ချက်ဆက်မှု အခြေအနေကို Server တက်လာတာနဲ့ စမ်းသပ်ခြင်း
+async function testSupabase() {
+    const { data, error } = await supabase.from("usertbl").select("*").limit(1);
+    if (error) {
+        console.log("❌ Supabase Cloud Connection Failed:", error.message);
+    } else {
+        console.log("🚀 Supabase Cloud Database Connected Successfully!");
+    }
+}
+testSupabase();
 
 
 
