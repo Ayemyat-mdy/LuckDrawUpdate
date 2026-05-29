@@ -42,23 +42,8 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
-/* DATABASE CONNECTION */
-const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "root",
-    database: "bingo"
-});
 
-/* CONNECT DATABASE */
-db.connect((err) => {
-    if (err) {
-        console.log("Database Connection Failed");
-        console.log(err);
-    } else {
-        console.log("MySQL Connected");
-    }
-});
+
 
 /* 🎰 BINGO GAME STATE (SERVER-SIDE MEMORY) */
 let playerSockets = new Set();
