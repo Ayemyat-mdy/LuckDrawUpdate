@@ -1,3 +1,26 @@
+// 1. Supabase Client SDK ကို ခေါ်ယူပါ (npm install @supabase/supabase-js လုပ်ထားရပါမည်)
+const { createClient } = require('@supabase/supabase-js');
+
+// 2. Render Environment Variables များမှတစ်ဆင့် လှမ်းဖတ်ခြင်း
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// 3. ဥပမာ - 'usertbl' ထဲက User အားလုံးကို ဆွဲထုတ်မည့် Function
+async function getUsers() {
+  const { data, error } = await supabase
+    .from('usertbl') // သင့်ပုံထဲက Table နာမည်အတိုင်း အတိအကျရေးရန်
+    .select('*');
+
+  if (error) {
+    console.error('Error fetching users:', error);
+    return;
+  }
+  console.log('Users Data:', data);
+  return data;
+}
+
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
